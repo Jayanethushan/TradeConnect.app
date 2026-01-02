@@ -1265,6 +1265,208 @@
             color: white;
         }
 
+        /* Post Options Menu */
+        .post-options-menu {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            z-index: 10;
+        }
+
+        .post-options-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--hover-bg);
+            border: none;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .post-options-btn:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        .post-options-dropdown {
+            position: absolute;
+            top: 40px;
+            right: 0;
+            background: var(--card-bg);
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+            border: 1px solid var(--border-color);
+            display: none;
+            min-width: 180px;
+            z-index: 100;
+        }
+
+        .post-options-dropdown.active {
+            display: block;
+            animation: popIn 0.2s ease;
+        }
+
+        .post-option {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            background: none;
+            border: none;
+            color: var(--text-primary);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+            text-align: left;
+            font-size: 14px;
+        }
+
+        .post-option:hover {
+            background: var(--hover-bg);
+        }
+
+        .post-option.delete {
+            color: var(--danger);
+        }
+
+        .post-option.delete:hover {
+            background: rgba(240, 40, 73, 0.1);
+        }
+
+        /* Chat List */
+        .chat-list {
+            padding: 20px;
+            background: var(--card-bg);
+            border-radius: 20px;
+            margin: 20px;
+            box-shadow: var(--card-shadow);
+        }
+
+        .chat-list-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .chat-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 12px;
+            background: var(--hover-bg);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .chat-item:hover {
+            background: var(--primary-light);
+            transform: translateY(-2px);
+        }
+
+        .chat-item.active {
+            background: var(--primary);
+            color: white;
+        }
+
+        .chat-item-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: var(--gradient-primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: 18px;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+
+        .chat-item-info {
+            flex: 1;
+        }
+
+        .chat-item-name {
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .chat-item-last-message {
+            font-size: 13px;
+            color: var(--text-secondary);
+            display: -webkit-box;
+            -webkit-line-clamp: 1;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .chat-item-time {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        .chat-item.active .chat-item-last-message,
+        .chat-item.active .chat-item-time {
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        /* Quick Tips in Settings */
+        .quick-tips-container {
+            background: var(--hover-bg);
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        .quick-tip-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .quick-tip-item:last-child {
+            margin-bottom: 0;
+            padding-bottom: 0;
+            border-bottom: none;
+        }
+
+        .quick-tip-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            background: var(--primary);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .quick-tip-content h4 {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .quick-tip-content p {
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
         /* ===== RESPONSIVE DESIGN ===== */
         @media (max-width: 768px) {
             .menu-toggle {
@@ -1327,6 +1529,25 @@
             .profile-avatar {
                 width: 120px;
                 height: 120px;
+            }
+
+            .chat-list {
+                margin: 10px;
+                padding: 15px;
+            }
+
+            .chat-item-avatar {
+                width: 45px;
+                height: 45px;
+                font-size: 16px;
+            }
+
+            .chat-item-name {
+                font-size: 14px;
+            }
+
+            .chat-item-last-message {
+                font-size: 12px;
             }
         }
 
@@ -1438,6 +1659,36 @@
             from { transform: translate(-50%, 0); opacity: 1; }
             to { transform: translate(-50%, 100%); opacity: 0; }
         }
+
+        /* Unread message indicator */
+        .unread-count {
+            background: var(--danger);
+            color: white;
+            font-size: 11px;
+            font-weight: 600;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: absolute;
+            top: -5px;
+            right: -5px;
+        }
+
+        /* Profile picture preview in settings */
+        .settings-profile-picture {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            margin: 0 auto 20px;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            border: 3px solid var(--primary);
+            position: relative;
+        }
     </style>
 </head>
 <body data-theme="light">
@@ -1548,11 +1799,12 @@
                     <div class="nav-text" data-i18n="network">Network</div>
                 </div>
                 
-                <div class="nav-item" onclick="openMessenger()">
+                <div class="nav-item" onclick="switchPage('chat-list')">
                     <div class="nav-icon">
                         <i class="fas fa-comments"></i>
                     </div>
                     <div class="nav-text" data-i18n="messages">Messages</div>
+                    <div class="unread-count" id="sidebar-unread-count" style="display: none;">0</div>
                 </div>
                 
                 <div class="nav-item" onclick="switchPage('notifications')">
@@ -1599,6 +1851,7 @@
                         <div>• Hover for reactions</div>
                         <div>• Click profile to upload DP</div>
                         <div>• Press & hold for message options</div>
+                        <div>• Swipe left to delete chat</div>
                     </div>
                 </div>
             </div>
@@ -1625,14 +1878,14 @@
                             <span id="current-language">EN</span>
                         </div>
                         
-                        <div class="nav-btn" onclick="openMessenger()" aria-label="Open messages">
+                        <div class="nav-btn" onclick="switchPage('chat-list')" aria-label="Open messages">
                             <i class="fas fa-comments"></i>
-                            <div class="notification-badge">3</div>
+                            <div class="notification-badge" id="navbar-unread-count">0</div>
                         </div>
                         
                         <div class="nav-btn" onclick="switchPage('notifications')" aria-label="Open notifications">
                             <i class="fas fa-bell"></i>
-                            <div class="notification-badge">5</div>
+                            <div class="notification-badge" id="navbar-notif-count">0</div>
                         </div>
                         
                         <div class="nav-btn" onclick="toggleTheme()" id="theme-toggle-btn" aria-label="Toggle theme">
@@ -1722,6 +1975,18 @@
                     </div>
                 </div>
 
+                <!-- Chat List Page -->
+                <div id="chat-list-page" class="page">
+                    <div class="chat-list">
+                        <h2 class="chat-list-title">
+                            <i class="fas fa-comments"></i> <span data-i18n="messages">Messages</span>
+                        </h2>
+                        <div id="chat-list-container">
+                            <!-- Chat list will be loaded here -->
+                        </div>
+                    </div>
+                </div>
+
                 <!-- Notifications Page -->
                 <div id="notifications-page" class="page">
                     <div class="notifications-page">
@@ -1790,9 +2055,10 @@
                     <i class="fas fa-users"></i>
                     <span data-i18n="network">Network</span>
                 </button>
-                <button class="nav-tab" onclick="openMessenger()">
+                <button class="nav-tab" onclick="switchPage('chat-list')">
                     <i class="fas fa-comments"></i>
                     <span data-i18n="messages">Messages</span>
+                    <div class="unread-count" id="bottom-unread-count" style="display: none;">0</div>
                 </button>
                 <button class="nav-tab" onclick="switchPage('notifications')">
                     <i class="fas fa-bell"></i>
@@ -1809,10 +2075,10 @@
         <div id="messenger-window" class="messenger-window">
             <div class="messenger-header">
                 <div style="display: flex; align-items: center; gap: 12px;">
-                    <div class="user-avatar" style="background-image: url('');">TH</div>
+                    <div class="user-avatar" id="chat-avatar" style="background-image: url('');">TH</div>
                     <div>
-                        <h4 style="font-weight: 600;">TechHub Electronics</h4>
-                        <div style="font-size: 12px; opacity: 0.8;" data-i18n="onlineWholesale">Online • Wholesale Supplier</div>
+                        <h4 style="font-weight: 600;" id="chat-title">TechHub Electronics</h4>
+                        <div style="font-size: 12px; opacity: 0.8;" id="chat-subtitle" data-i18n="onlineWholesale">Online • Wholesale Supplier</div>
                     </div>
                 </div>
                 <div style="display: flex; gap: 15px;">
@@ -1827,7 +2093,7 @@
                 </div>
                 
                 <div class="typing-indicator" id="typing-indicator" style="display: none;">
-                    <div>TechHub Electronics is typing</div>
+                    <div id="typing-text">TechHub Electronics is typing</div>
                     <div class="typing-dots">
                         <span></span>
                         <span></span>
@@ -2071,6 +2337,34 @@
         </div>
     </div>
 
+    <!-- Edit Post Modal -->
+    <div id="edit-post-modal" class="modal-overlay">
+        <div class="modal">
+            <div class="modal-header">
+                <button class="modal-back-btn" onclick="closeModal('edit-post-modal')" aria-label="Go back">
+                    <i class="fas fa-arrow-left"></i>
+                </button>
+                <h2 class="modal-title" data-i18n="editPost">Edit Post</h2>
+            </div>
+            
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="form-label" data-i18n="postContent">Post Content</label>
+                    <textarea id="edit-post-content" class="form-textarea" rows="4" placeholder="Edit your post..."></textarea>
+                </div>
+            </div>
+            
+            <div class="modal-footer">
+                <button class="btn btn-primary" style="flex: 1;" onclick="saveEditedPost()">
+                    <i class="fas fa-save"></i> <span data-i18n="saveChanges">Save Changes</span>
+                </button>
+                <button class="btn btn-secondary" style="flex: 1;" onclick="closeModal('edit-post-modal')">
+                    <span data-i18n="cancel">Cancel</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
     <!-- Settings Modal -->
     <div id="settings-modal" class="modal-overlay">
         <div class="modal">
@@ -2083,7 +2377,7 @@
             
             <div class="modal-body">
                 <div class="profile-picture-upload">
-                    <div class="profile-picture-preview" id="settings-profile-picture" style="background-image: url(''); width: 100px; height: 100px;">
+                    <div class="settings-profile-picture" id="settings-profile-picture" style="background-image: url('');">
                         <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: var(--text-secondary); font-size: 14px; text-align: center;">
                             MB
                         </div>
@@ -2134,20 +2428,48 @@
                 </div>
                 
                 <!-- Quick Tips -->
-                <div class="form-group">
-                    <label class="form-label" data-i18n="quickTips">Quick Tips</label>
-                    <div style="background: var(--hover-bg); border-radius: 12px; padding: 20px; margin-top: 10px;">
-                        <div style="margin-bottom: 10px;">
-                            <div style="font-weight: 500; margin-bottom: 5px;">Messaging:</div>
-                            <div style="font-size: 13px; color: var(--text-secondary);">Press Enter to send messages</div>
+                <div class="quick-tips-container">
+                    <div style="font-size: 16px; font-weight: 600; margin-bottom: 15px; display: flex; align-items: center; gap: 10px;">
+                        <i class="fas fa-lightbulb"></i> <span data-i18n="quickTips">Quick Tips</span>
+                    </div>
+                    
+                    <div class="quick-tip-item">
+                        <div class="quick-tip-icon">
+                            <i class="fas fa-keyboard"></i>
                         </div>
-                        <div style="margin-bottom: 10px;">
-                            <div style="font-weight: 500; margin-bottom: 5px;">Posts:</div>
-                            <div style="font-size: 13px; color: var(--text-secondary);">Hover over Like button for reactions</div>
+                        <div class="quick-tip-content">
+                            <h4 data-i18n="messagingTip">Messaging</h4>
+                            <p data-i18n="messagingDesc">Press Enter to send messages quickly</p>
                         </div>
-                        <div>
-                            <div style="font-weight: 500; margin-bottom: 5px;">Profile:</div>
-                            <div style="font-size: 13px; color: var(--text-secondary);">Click profile picture to upload DP</div>
+                    </div>
+                    
+                    <div class="quick-tip-item">
+                        <div class="quick-tip-icon">
+                            <i class="fas fa-thumbs-up"></i>
+                        </div>
+                        <div class="quick-tip-content">
+                            <h4 data-i18n="reactionsTip">Reactions</h4>
+                            <p data-i18n="reactionsDesc">Hover over Like button for more reactions</p>
+                        </div>
+                    </div>
+                    
+                    <div class="quick-tip-item">
+                        <div class="quick-tip-icon">
+                            <i class="fas fa-camera"></i>
+                        </div>
+                        <div class="quick-tip-content">
+                            <h4 data-i18n="profileTip">Profile Picture</h4>
+                            <p data-i18n="profileDesc">Click profile picture to upload display photo</p>
+                        </div>
+                    </div>
+                    
+                    <div class="quick-tip-item">
+                        <div class="quick-tip-icon">
+                            <i class="fas fa-edit"></i>
+                        </div>
+                        <div class="quick-tip-content">
+                            <h4 data-i18n="editPostTip">Edit Posts</h4>
+                            <p data-i18n="editPostDesc">Click three dots on your posts to edit or delete</p>
                         </div>
                     </div>
                 </div>
@@ -2190,11 +2512,12 @@
             <div class="nav-text" data-i18n="network">Network</div>
         </div>
         
-        <div class="nav-item" onclick="openMessenger(); closeMobileMenu();">
+        <div class="nav-item" onclick="switchPage('chat-list'); closeMobileMenu();">
             <div class="nav-icon">
                 <i class="fas fa-comments"></i>
             </div>
             <div class="nav-text" data-i18n="messages">Messages</div>
+            <div class="unread-count" id="mobile-unread-count" style="display: none;">0</div>
         </div>
         
         <div class="nav-item" onclick="switchPage('notifications'); closeMobileMenu();">
@@ -2236,14 +2559,14 @@
 
     <script>
         // ===== FIREBASE CONFIGURATION =====
-        // Replace with your Firebase config from console
+        // 🔥 Replace with your actual Firebase config from console
         const firebaseConfig = {
-            apiKey: "AIzaSyC2PjPw1Hs2k_b6L0LXWgLf4qPzFkD5M8Y",
-            authDomain: "tradeconnect-demo.firebaseapp.com",
-            projectId: "tradeconnect-demo",
-            storageBucket: "tradeconnect-demo.appspot.com",
-            messagingSenderId: "123456789012",
-            appId: "1:123456789012:web:abcdef1234567890"
+            apiKey: "YOUR_API_KEY_HERE",
+            authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+            projectId: "YOUR_PROJECT_ID",
+            storageBucket: "YOUR_PROJECT_ID.appspot.com",
+            messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+            appId: "YOUR_APP_ID"
         };
 
         // Initialize Firebase
@@ -2251,9 +2574,9 @@
         try {
             firebase.initializeApp(firebaseConfig);
             firebaseInitialized = true;
-            console.log("Firebase initialized successfully");
+            console.log("🔥 Firebase initialized successfully");
         } catch (e) {
-            console.log("Firebase initialization failed, running in demo mode");
+            console.log("⚠️ Firebase initialization failed, running in demo mode");
         }
         
         const auth = firebaseInitialized ? firebase.auth() : null;
@@ -2268,12 +2591,15 @@
         let activePage = 'home';
         let notifications = [];
         let messages = [];
+        let chats = [];
         let activeReactions = {};
         let currentProfilePicture = '';
         let currentProfilePictureFile = null;
         let pageHistory = ['home'];
         let businesses = [];
         let isTyping = false;
+        let currentChat = null;
+        let editingPostId = null;
 
         // ===== LANGUAGE TRANSLATIONS =====
         const translations = {
@@ -2312,11 +2638,16 @@
                 "post": "Post",
                 "postHint": "Press Enter to post",
                 "createPost": "Create Post",
+                "editPost": "Edit Post",
                 "postContent": "Post Content",
                 "sharePlaceholder": "What would you like to share?",
                 "addImage": "Add Image (Optional)",
                 "clickToUpload": "Click to upload image",
                 "publish": "Publish",
+                "edit": "Edit",
+                "delete": "Delete",
+                "editPostTip": "Edit Posts",
+                "editPostDesc": "Click three dots on your posts to edit or delete",
                 
                 // Profile
                 "editProfile": "Edit Profile",
@@ -2334,6 +2665,12 @@
                 // Messenger
                 "onlineWholesale": "Online • Wholesale Supplier",
                 "messagePlaceholder": "Type a message...",
+                "messagingTip": "Messaging",
+                "messagingDesc": "Press Enter to send messages quickly",
+                "reactionsTip": "Reactions",
+                "reactionsDesc": "Hover over Like button for more reactions",
+                "profileTip": "Profile Picture",
+                "profileDesc": "Click profile picture to upload display photo",
                 
                 // Register Modal
                 "registerBusiness": "Register Business Account",
@@ -2406,11 +2743,16 @@
                 "post": "පළ කරන්න",
                 "postHint": "පළ කිරීමට Enter ඔබන්න",
                 "createPost": "පළ කිරීමක් සාදන්න",
+                "editPost": "පළ කිරීම සංස්කරණය",
                 "postContent": "පළ කිරීමේ අන්තර්ගතය",
                 "sharePlaceholder": "ඔබට බෙදා ගැනීමට අවශ්‍ය දේ කුමක්ද?",
                 "addImage": "පින්තූරයක් එකතු කරන්න (විකල්ප)",
                 "clickToUpload": "උඩුගත කිරීමට ක්ලික් කරන්න",
                 "publish": "ප්‍රකාශයට පත් කරන්න",
+                "edit": "සංස්කරණය",
+                "delete": "මකන්න",
+                "editPostTip": "පළ කිරීම් සංස්කරණය",
+                "editPostDesc": "ඔබේ පළ කිරීම්වල තිත් තුනක් ක්ලික් කර සංස්කරණය හෝ මකන්න",
                 
                 // Profile
                 "editProfile": "පැතිකඩ සංස්කරණය",
@@ -2428,6 +2770,12 @@
                 // Messenger
                 "onlineWholesale": "අන්තර්ජාලය • තොග සැපයුම්කරු",
                 "messagePlaceholder": "පණිවිඩයක් ටයිප් කරන්න...",
+                "messagingTip": "පණිවිඩ",
+                "messagingDesc": "පණිවිඩ ඉක්මනින් යැවීමට Enter ඔබන්න",
+                "reactionsTip": "ප්‍රතික්‍රියා",
+                "reactionsDesc": "තවත් ප්‍රතික්‍රියා සඳහා කැමති බොත්තම උඩින් සෙල්ලම් කරන්න",
+                "profileTip": "පැතිකඩ පින්තූරය",
+                "profileDesc": "පෙන්වුම් පින්තූරය උඩුගත කිරීමට පැතිකඩ පින්තූරය ක්ලික් කරන්න",
                 
                 // Register Modal
                 "registerBusiness": "ව්‍යාපාරික ගිණුම ලියාපදිංචි කරන්න",
@@ -2526,6 +2874,9 @@
             
             // Set up profile picture upload
             setupProfilePictureUpload();
+            
+            // Set up post image upload
+            setupPostImageUpload();
         });
 
         function setupEventListeners() {
@@ -2613,6 +2964,19 @@
                     reader.readAsDataURL(file);
                 }
             });
+        }
+
+        function setupPostImageUpload() {
+            const postImageInput = document.getElementById('post-image');
+            if (postImageInput) {
+                postImageInput.addEventListener('change', function(e) {
+                    const file = e.target.files[0];
+                    if (file) {
+                        // Show preview if needed
+                        showToast(currentLanguage === 'en' ? 'Image selected' : 'පින්තූරය තෝරාගත්තා', 'success');
+                    }
+                });
+            }
         }
 
         // ===== BACK BUTTON FUNCTIONS =====
@@ -2720,10 +3084,39 @@
                     updateProfilePicture();
                     closeModal('profile-picture-modal');
                     showToast(currentLanguage === 'en' ? 'Profile picture updated!' : 'පැතිකඩ පින්තූරය යාවත්කාලීන කරන ලදී!', 'success');
+                    
+                    // If Firebase is initialized, upload to storage
+                    if (firebaseInitialized && currentUser) {
+                        uploadProfilePictureToFirebase(currentProfilePictureFile);
+                    }
                 };
                 reader.readAsDataURL(currentProfilePictureFile);
             } else {
                 showToast(currentLanguage === 'en' ? 'Please select a photo first' : 'කරුණාකර පළමුව පින්තූරයක් තෝරන්න', 'warning');
+            }
+        }
+
+        async function uploadProfilePictureToFirebase(file) {
+            try {
+                const storageRef = storage.ref();
+                const profilePictureRef = storageRef.child(`profile_pictures/${currentUser.id}_${Date.now()}`);
+                
+                // Upload file
+                const snapshot = await profilePictureRef.put(file);
+                const downloadURL = await snapshot.ref.getDownloadURL();
+                
+                // Update user document in Firestore
+                await db.collection('users').doc(currentUser.id).update({
+                    profilePicture: downloadURL
+                });
+                
+                currentProfilePicture = downloadURL;
+                updateProfilePicture();
+                
+                showToast(currentLanguage === 'en' ? 'Profile picture saved to cloud!' : 'පැතිකඩ පින්තූරය ක්ලවුඩ් එකට සුරකින ලදී!', 'success');
+            } catch (error) {
+                console.error('Error uploading profile picture:', error);
+                showToast(currentLanguage === 'en' ? 'Failed to upload to cloud' : 'ක්ලවුඩ් එකට උඩුගත කිරීමට අසමත් විය', 'danger');
             }
         }
 
@@ -2734,12 +3127,14 @@
                 document.getElementById('user-avatar'),
                 document.getElementById('current-user-avatar'),
                 document.getElementById('edit-profile-picture'),
-                document.getElementById('settings-profile-picture')
+                document.getElementById('settings-profile-picture'),
+                document.getElementById('chat-avatar')
             ];
             
             profilePictures.forEach(pic => {
                 if (pic && currentProfilePicture) {
                     pic.style.backgroundImage = `url(${currentProfilePicture})`;
+                    // Only clear text if it's not the edit preview
                     if (pic.id !== 'edit-profile-picture' && pic.id !== 'settings-profile-picture') {
                         pic.textContent = '';
                     }
@@ -2816,7 +3211,8 @@
                     createdAt: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(),
                     price: currentLanguage === 'en' ? "Rs. 85,000" : "රු. 85,000",
                     minOrder: currentLanguage === 'en' ? "10 units" : "ඒකක 10 ක්",
-                    userReaction: "like"
+                    userReaction: "like",
+                    userId: "techhub123"
                 },
                 {
                     id: 2,
@@ -2844,7 +3240,8 @@
                     offerTitle: currentLanguage === 'en' ? "First Order Discount" : "පළමු ඇණවුම් වට්ටම",
                     discount: "10%",
                     validDate: "2024-12-31",
-                    userReaction: "love"
+                    userReaction: "love",
+                    userId: "freshmart456"
                 },
                 {
                     id: 3,
@@ -2869,7 +3266,8 @@
                     category: "clothing",
                     timestamp: currentLanguage === 'en' ? "1 day ago" : "දින 1 කට පෙර",
                     createdAt: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString(),
-                    userReaction: null
+                    userReaction: null,
+                    userId: "styletext789"
                 }
             ];
 
@@ -2910,11 +3308,47 @@
                 }
             ];
 
-            // Demo messages
+            // Demo chats
+            chats = [
+                {
+                    id: "chat1",
+                    businessId: "techhub123",
+                    businessName: "TechHub Electronics",
+                    businessLogo: "TH",
+                    lastMessage: currentLanguage === 'en' ? "Great! Also, what's the minimum order quantity?" : "හොඳයි! එසේම, අවම ඇණවුම් ප්‍රමාණය කුමක්ද?",
+                    lastMessageTime: "10:35 AM",
+                    unreadCount: 2,
+                    online: true
+                },
+                {
+                    id: "chat2",
+                    businessId: "freshmart456",
+                    businessName: "FreshMart Produce",
+                    businessLogo: "FM",
+                    lastMessage: currentLanguage === 'en' ? "Can you deliver to Kandy?" : "ඔබට මහනුවරට බෙදාහැරිය හැකිද?",
+                    lastMessageTime: "Yesterday",
+                    unreadCount: 0,
+                    online: false
+                },
+                {
+                    id: "chat3",
+                    businessId: "styletext789",
+                    businessName: "Style Textiles",
+                    businessLogo: "ST",
+                    lastMessage: currentLanguage === 'en' ? "Send me the catalog please" : "කැටලොගය මට එවන්න",
+                    lastMessageTime: "2 days ago",
+                    unreadCount: 1,
+                    online: true
+                }
+            ];
+
+            // Demo messages for TechHub chat
             messages = [
                 {
                     id: 1,
+                    chatId: "chat1",
                     sender: "TechHub Electronics",
+                    senderId: "techhub123",
                     senderLogo: "TH",
                     senderLogoUrl: "",
                     text: currentLanguage === 'en'
@@ -2922,11 +3356,14 @@
                         : "ආයුබෝවන්! ඔබේ තොග පිරිනැමීමට උනන්දු වෙමි. ඔබට කැටලොගය බෙදා ගත හැකිද?",
                     time: "10:30 AM",
                     sent: false,
-                    status: "read"
+                    status: "read",
+                    timestamp: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString()
                 },
                 {
                     id: 2,
+                    chatId: "chat1",
                     sender: "You",
+                    senderId: currentUser ? currentUser.id : "demo123",
                     senderLogo: "MB",
                     senderLogoUrl: currentProfilePicture,
                     text: currentLanguage === 'en'
@@ -2934,11 +3371,14 @@
                         : "ඇත්තෙන්ම! මම ඔබට PDF කැටලොගය ඊමේල් එකෙන් යවන්නම්.",
                     time: "10:32 AM",
                     sent: true,
-                    status: "read"
+                    status: "read",
+                    timestamp: new Date(Date.now() - 1.8 * 60 * 60 * 1000).toISOString()
                 },
                 {
                     id: 3,
+                    chatId: "chat1",
                     sender: "TechHub Electronics",
+                    senderId: "techhub123",
                     senderLogo: "TH",
                     senderLogoUrl: "",
                     text: currentLanguage === 'en'
@@ -2946,15 +3386,17 @@
                         : "හොඳයි! එසේම, අවම ඇණවුම් ප්‍රමාණය කුමක්ද?",
                     time: "10:35 AM",
                     sent: false,
-                    status: "delivered"
+                    status: "delivered",
+                    timestamp: new Date(Date.now() - 1.5 * 60 * 60 * 1000).toISOString()
                 }
             ];
 
             // Load initial data
             loadPosts();
             loadNotifications();
-            loadMessages();
+            loadChatList();
             loadBusinesses();
+            updateUnreadCounts();
         }
 
         function updateDemoDataLanguage() {
@@ -3001,6 +3443,17 @@
                 }
             });
             
+            // Update chats
+            chats.forEach(chat => {
+                if (chat.id === "chat1") {
+                    chat.lastMessage = currentLanguage === 'en' ? "Great! Also, what's the minimum order quantity?" : "හොඳයි! එසේම, අවම ඇණවුම් ප්‍රමාණය කුමක්ද?";
+                } else if (chat.id === "chat2") {
+                    chat.lastMessage = currentLanguage === 'en' ? "Can you deliver to Kandy?" : "ඔබට මහනුවරට බෙදාහැරිය හැකිද?";
+                } else if (chat.id === "chat3") {
+                    chat.lastMessage = currentLanguage === 'en' ? "Send me the catalog please" : "කැටලොගය මට එවන්න";
+                }
+            });
+            
             // Update messages
             messages.forEach(message => {
                 if (message.id === 1) {
@@ -3021,8 +3474,11 @@
             // Reload UI
             if (activePage === 'home') loadPosts();
             loadNotifications();
-            loadMessages();
+            loadChatList();
             loadBusinesses();
+            if (currentChat) {
+                loadMessages();
+            }
         }
 
         // ===== MOBILE MENU FUNCTIONS =====
@@ -3059,6 +3515,11 @@
             const pageElement = document.getElementById(`${page}-page`);
             if (pageElement) {
                 pageElement.classList.add('active');
+            } else if (page === 'chat-list') {
+                const chatListPage = document.getElementById('chat-list-page');
+                if (chatListPage) {
+                    chatListPage.classList.add('active');
+                }
             }
             
             // Update navigation
@@ -3071,6 +3532,9 @@
                     break;
                 case 'network':
                     loadBusinesses();
+                    break;
+                case 'chat-list':
+                    loadChatList();
                     break;
                 case 'notifications':
                     loadNotifications();
@@ -3112,6 +3576,7 @@
             const pageMap = {
                 'home': 'fa-home',
                 'network': 'fa-users',
+                'chat-list': 'fa-comments',
                 'notifications': 'fa-bell',
                 'profile': 'fa-user'
             };
@@ -3165,7 +3630,8 @@
                 category: currentUser ? currentUser.category : "electronics",
                 timestamp: currentLanguage === 'en' ? "Just now" : "දැන්ම",
                 createdAt: new Date().toISOString(),
-                userReaction: null
+                userReaction: null,
+                userId: currentUser ? currentUser.id : "demo123"
             };
             
             // Add to posts array (at the beginning)
@@ -3185,6 +3651,24 @@
             
             // Save to localStorage
             saveToLocalStorage();
+            
+            // If Firebase is initialized, save to Firestore
+            if (firebaseInitialized && db && currentUser) {
+                savePostToFirebase(newPost);
+            }
+        }
+
+        async function savePostToFirebase(post) {
+            try {
+                const postRef = db.collection('posts').doc(String(post.id));
+                await postRef.set({
+                    ...post,
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                });
+                console.log('Post saved to Firebase');
+            } catch (error) {
+                console.error('Error saving post to Firebase:', error);
+            }
         }
 
         function createPostElement(post) {
@@ -3293,6 +3777,9 @@
                 likeButtonText = currentLanguage === 'en' ? 'Like' : 'කැමති';
             }
             
+            // Check if current user owns this post
+            const isOwner = currentUser && (post.userId === currentUser.id || post.businessId === currentUser.id);
+            
             postEl.innerHTML = `
                 <div class="post-header">
                     <div class="post-user">
@@ -3305,9 +3792,25 @@
                             </div>
                         </div>
                     </div>
+                    
+                    ${isOwner ? `
+                    <div class="post-options-menu">
+                        <button class="post-options-btn" onclick="togglePostOptions(${post.id})">
+                            <i class="fas fa-ellipsis-h"></i>
+                        </button>
+                        <div class="post-options-dropdown" id="post-options-${post.id}">
+                            <button class="post-option" onclick="editPost(${post.id})">
+                                <i class="fas fa-edit"></i> <span data-i18n="edit">Edit</span>
+                            </button>
+                            <button class="post-option delete" onclick="deletePost(${post.id})">
+                                <i class="fas fa-trash"></i> <span data-i18n="delete">Delete</span>
+                            </button>
+                        </div>
+                    </div>
+                    ` : ''}
                 </div>
                 
-                <div class="post-content">
+                <div class="post-content" id="post-content-${post.id}">
                     ${post.content}
                     ${extraContent}
                 </div>
@@ -3366,6 +3869,132 @@
             `;
             
             return postEl;
+        }
+
+        // ===== POST OPTIONS FUNCTIONS =====
+        function togglePostOptions(postId) {
+            const dropdown = document.getElementById(`post-options-${postId}`);
+            const allDropdowns = document.querySelectorAll('.post-options-dropdown');
+            
+            // Close all other dropdowns
+            allDropdowns.forEach(d => {
+                if (d.id !== `post-options-${postId}`) {
+                    d.classList.remove('active');
+                }
+            });
+            
+            // Toggle current dropdown
+            dropdown.classList.toggle('active');
+            
+            // Close dropdown when clicking outside
+            setTimeout(() => {
+                document.addEventListener('click', closePostOptionsOnClickOutside);
+            }, 10);
+        }
+
+        function closePostOptionsOnClickOutside(event) {
+            const dropdowns = document.querySelectorAll('.post-options-dropdown');
+            dropdowns.forEach(dropdown => {
+                if (!dropdown.contains(event.target) && !event.target.closest('.post-options-btn')) {
+                    dropdown.classList.remove('active');
+                }
+            });
+        }
+
+        function editPost(postId) {
+            const post = posts.find(p => p.id == postId);
+            if (!post) return;
+            
+            editingPostId = postId;
+            document.getElementById('edit-post-content').value = post.content;
+            document.getElementById('edit-post-modal').classList.add('active');
+            
+            // Close dropdown
+            document.getElementById(`post-options-${postId}`).classList.remove('active');
+        }
+
+        function saveEditedPost() {
+            if (!editingPostId) return;
+            
+            const newContent = document.getElementById('edit-post-content').value.trim();
+            if (!newContent) {
+                showToast(currentLanguage === 'en' ? 'Please enter post content' : 'කරුණාකර පළ කිරීමේ අන්තර්ගතය ඇතුළත් කරන්න', 'warning');
+                return;
+            }
+            
+            const postIndex = posts.findIndex(p => p.id == editingPostId);
+            if (postIndex !== -1) {
+                posts[postIndex].content = newContent;
+                posts[postIndex].timestamp = currentLanguage === 'en' ? 'Edited • Just now' : 'සංස්කරණය කළා • දැන්ම';
+                
+                // Update UI
+                loadPosts();
+                closeModal('edit-post-modal');
+                showToast(currentLanguage === 'en' ? 'Post updated successfully!' : 'පළ කිරීම සාර්ථකව යාවත්කාලීන කරන ලදී!', 'success');
+                
+                // Save to localStorage
+                saveToLocalStorage();
+                
+                // If Firebase is initialized, update in Firestore
+                if (firebaseInitialized && db) {
+                    updatePostInFirebase(editingPostId, newContent);
+                }
+            }
+            
+            editingPostId = null;
+        }
+
+        async function updatePostInFirebase(postId, newContent) {
+            try {
+                const postRef = db.collection('posts').doc(String(postId));
+                await postRef.update({
+                    content: newContent,
+                    updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                });
+                console.log('Post updated in Firebase');
+            } catch (error) {
+                console.error('Error updating post in Firebase:', error);
+            }
+        }
+
+        function deletePost(postId) {
+            const confirmMessage = currentLanguage === 'en' 
+                ? 'Are you sure you want to delete this post?' 
+                : 'ඔබට මෙම පළ කිරීම මකා දැමීමට අවශ්‍ය බව විශ්වාසද?';
+            
+            if (!confirm(confirmMessage)) return;
+            
+            const postIndex = posts.findIndex(p => p.id == postId);
+            if (postIndex !== -1) {
+                posts.splice(postIndex, 1);
+                
+                // Update UI
+                loadPosts();
+                showToast(currentLanguage === 'en' ? 'Post deleted successfully!' : 'පළ කිරීම සාර්ථකව මකා දමන ලදී!', 'success');
+                
+                // Update post count
+                updatePostCount();
+                
+                // Save to localStorage
+                saveToLocalStorage();
+                
+                // If Firebase is initialized, delete from Firestore
+                if (firebaseInitialized && db) {
+                    deletePostFromFirebase(postId);
+                }
+            }
+            
+            // Close dropdown
+            document.getElementById(`post-options-${postId}`).classList.remove('active');
+        }
+
+        async function deletePostFromFirebase(postId) {
+            try {
+                await db.collection('posts').doc(String(postId)).delete();
+                console.log('Post deleted from Firebase');
+            } catch (error) {
+                console.error('Error deleting post from Firebase:', error);
+            }
         }
 
         // ===== REACTIONS FUNCTIONS =====
@@ -3442,6 +4071,9 @@
             
             // Close reactions popup
             closeReactions();
+            
+            // Save to localStorage
+            saveToLocalStorage();
         }
 
         function loadPosts() {
@@ -3454,7 +4086,9 @@
                 filteredPosts = posts.filter(post => 
                     post.content.toLowerCase().includes(searchTerm) ||
                     post.businessName.toLowerCase().includes(searchTerm) ||
-                    (post.category && post.category.toLowerCase().includes(searchTerm))
+                    (post.category && post.category.toLowerCase().includes(searchTerm)) ||
+                    (post.type && post.type.toLowerCase().includes(searchTerm)) ||
+                    (post.offerTitle && post.offerTitle.toLowerCase().includes(searchTerm))
                 );
             }
             
@@ -3464,6 +4098,9 @@
                         <i class="fas fa-search" style="font-size: 60px; color: var(--text-tertiary); margin-bottom: 20px;"></i>
                         <h3 style="margin-bottom: 10px;">${currentLanguage === 'en' ? 'No posts found' : 'පළ කිරීම් හමු නොවීය'}</h3>
                         <p style="color: var(--text-secondary);">${currentLanguage === 'en' ? 'Try different search terms' : 'වෙනස් සෙවුම් පද උත්සාහ කරන්න'}</p>
+                        <button class="btn btn-primary" style="margin-top: 20px;" onclick="document.getElementById('post-content').focus()">
+                            <i class="fas fa-plus"></i> ${currentLanguage === 'en' ? 'Create First Post' : 'පළමු පළ කිරීම සාදන්න'}
+                        </button>
                     </div>
                 `;
                 return;
@@ -3482,12 +4119,14 @@
                 loadPosts();
             } else if (activePage === 'network') {
                 loadBusinesses();
+            } else if (activePage === 'chat-list') {
+                loadChatList();
             }
         }
 
         function updatePostCount() {
             if (currentUser) {
-                const userPosts = posts.filter(post => post.businessId === currentUser.id);
+                const userPosts = posts.filter(post => post.userId === currentUser.id);
                 document.getElementById('stat-posts').textContent = userPosts.length;
             }
         }
@@ -3541,7 +4180,7 @@
                             <button class="btn btn-primary" style="flex: 1; padding: 10px; font-size: 14px;" onclick="followBusiness('${business.id}')">
                                 <i class="fas fa-user-plus"></i> ${currentLanguage === 'en' ? 'Follow' : 'අනුගමනය'}
                             </button>
-                            <button class="btn btn-outline" style="flex: 1; padding: 10px; font-size: 14px;" onclick="messageBusiness('${business.id}')">
+                            <button class="btn btn-outline" style="flex: 1; padding: 10px; font-size: 14px;" onclick="openChat('${business.id}')">
                                 <i class="far fa-envelope"></i> ${currentLanguage === 'en' ? 'Message' : 'පණිවිඩ'}
                             </button>
                         </div>
@@ -3559,6 +4198,313 @@
                 loadBusinesses();
                 showToast(currentLanguage === 'en' ? `Following ${business.name}` : `${business.name} අනුගමනය කරයි`, 'success');
             }
+        }
+
+        // ===== CHAT FUNCTIONS =====
+        function loadChatList() {
+            const container = document.getElementById('chat-list-container');
+            const searchTerm = document.getElementById('global-search').value.toLowerCase();
+            
+            let filteredChats = chats;
+            
+            if (searchTerm) {
+                filteredChats = chats.filter(chat => 
+                    chat.businessName.toLowerCase().includes(searchTerm)
+                );
+            }
+            
+            if (filteredChats.length === 0) {
+                container.innerHTML = `
+                    <div style="text-align: center; padding: 60px 20px;">
+                        <i class="far fa-comments" style="font-size: 60px; color: var(--text-tertiary); margin-bottom: 20px;"></i>
+                        <h3 style="margin-bottom: 10px;">${currentLanguage === 'en' ? 'No conversations yet' : 'තවම සංවාද නොමැත'}</h3>
+                        <p style="color: var(--text-secondary;">${currentLanguage === 'en' ? 'Start a conversation with a business' : 'ව්‍යාපාරයක් සමඟ සංවාදයක් ආරම්භ කරන්න'}</p>
+                        <button class="btn btn-primary" style="margin-top: 20px;" onclick="switchPage('network')">
+                            <i class="fas fa-users"></i> ${currentLanguage === 'en' ? 'Browse Businesses' : 'ව්‍යාපාර ගවේෂණය කරන්න'}
+                        </button>
+                    </div>
+                `;
+                return;
+            }
+            
+            let html = '';
+            filteredChats.forEach(chat => {
+                html += `
+                    <div class="chat-item ${currentChat && currentChat.id === chat.id ? 'active' : ''}" onclick="openChat('${chat.businessId}')">
+                        <div class="chat-item-avatar" style="${chat.businessLogoUrl ? `background-image: url('${chat.businessLogoUrl}')` : ''}">${chat.businessLogoUrl ? '' : chat.businessLogo}</div>
+                        <div class="chat-item-info">
+                            <div class="chat-item-name">${chat.businessName}</div>
+                            <div class="chat-item-last-message">${chat.lastMessage}</div>
+                        </div>
+                        <div class="chat-item-time">${chat.lastMessageTime}</div>
+                        ${chat.unreadCount > 0 ? `<div class="unread-count">${chat.unreadCount}</div>` : ''}
+                    </div>
+                `;
+            });
+            
+            container.innerHTML = html;
+        }
+
+        function openChat(businessId) {
+            const business = businesses.find(b => b.id === businessId);
+            if (!business) {
+                // Create a new chat if business exists but chat doesn't
+                const newChat = {
+                    id: `chat_${businessId}`,
+                    businessId: businessId,
+                    businessName: businessId === "techhub123" ? "TechHub Electronics" : 
+                                 businessId === "freshmart456" ? "FreshMart Produce" : 
+                                 businessId === "styletext789" ? "Style Textiles" : "Business",
+                    businessLogo: businessId === "techhub123" ? "TH" : 
+                                 businessId === "freshmart456" ? "FM" : 
+                                 businessId === "styletext789" ? "ST" : "BS",
+                    lastMessage: currentLanguage === 'en' ? "Start a conversation..." : "සංවාදයක් ආරම්භ කරන්න...",
+                    lastMessageTime: "Now",
+                    unreadCount: 0,
+                    online: true
+                };
+                
+                // Add to chats if not already there
+                if (!chats.find(c => c.businessId === businessId)) {
+                    chats.unshift(newChat);
+                }
+                
+                currentChat = newChat;
+            } else {
+                // Find existing chat
+                let chat = chats.find(c => c.businessId === businessId);
+                
+                if (!chat) {
+                    // Create new chat
+                    chat = {
+                        id: `chat_${businessId}`,
+                        businessId: businessId,
+                        businessName: business.name,
+                        businessLogo: business.logo,
+                        lastMessage: currentLanguage === 'en' ? "Start a conversation..." : "සංවාදයක් ආරම්භ කරන්න...",
+                        lastMessageTime: "Now",
+                        unreadCount: 0,
+                        online: business.online
+                    };
+                    chats.unshift(chat);
+                }
+                
+                currentChat = chat;
+            }
+            
+            // Mark as read
+            if (currentChat.unreadCount > 0) {
+                currentChat.unreadCount = 0;
+                updateUnreadCounts();
+                loadChatList();
+            }
+            
+            // Open messenger window
+            openMessengerForChat(currentChat);
+        }
+
+        function openMessengerForChat(chat) {
+            document.getElementById('messenger-window').classList.add('active');
+            document.getElementById('chat-title').textContent = chat.businessName;
+            document.getElementById('chat-avatar').textContent = chat.businessLogo;
+            document.getElementById('chat-subtitle').textContent = chat.online ? 
+                (currentLanguage === 'en' ? 'Online • Wholesale Supplier' : 'අන්තර්ජාලය • තොග සැපයුම්කරු') : 
+                (currentLanguage === 'en' ? 'Offline • Wholesale Supplier' : 'නොබැඳි • තොග සැපයුම්කරු');
+            
+            // Load messages for this chat
+            loadMessages();
+            
+            // Update typing indicator text
+            document.getElementById('typing-text').textContent = `${chat.businessName} is typing`;
+        }
+
+        function openMessenger() {
+            // If no chat is selected, open chat list
+            if (!currentChat) {
+                switchPage('chat-list');
+                return;
+            }
+            
+            document.getElementById('messenger-window').classList.add('active');
+            loadMessages();
+        }
+
+        function closeMessenger() {
+            document.getElementById('messenger-window').classList.remove('active');
+        }
+
+        function loadMessages() {
+            const container = document.getElementById('messages-container');
+            
+            if (!currentChat) {
+                container.innerHTML = `
+                    <div style="text-align: center; padding: 40px 20px; color: var(--text-secondary);">
+                        <i class="far fa-comments" style="font-size: 40px; margin-bottom: 15px;"></i>
+                        <p>${currentLanguage === 'en' ? 'Select a chat to start messaging' : 'පණිවිඩ යැවීම ආරම්භ කිරීමට සංවාදයක් තෝරන්න'}</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            // Filter messages for current chat
+            const chatMessages = messages.filter(msg => msg.chatId === currentChat.id);
+            
+            if (chatMessages.length === 0) {
+                container.innerHTML = `
+                    <div style="text-align: center; padding: 40px 20px; color: var(--text-secondary);">
+                        <i class="far fa-comments" style="font-size: 40px; margin-bottom: 15px;"></i>
+                        <p>${currentLanguage === 'en' ? 'No messages yet' : 'තවම පණිවිඩ නොමැත'}</p>
+                        <p style="font-size: 14px; margin-top: 10px;">${currentLanguage === 'en' ? 'Send a message to start the conversation' : 'සංවාදය ආරම්භ කිරීමට පණිවිඩයක් යවන්න'}</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            let html = '';
+            chatMessages.forEach(message => {
+                if (message.sent) {
+                    html += `
+                        <div class="message message-sent">
+                            <div>${message.text}</div>
+                            <div class="message-status">
+                                <span>${message.time}</span>
+                                <i class="fas fa-check${message.status === 'read' ? '-double' : ''}" style="margin-left: 5px;"></i>
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    html += `
+                        <div class="message message-received">
+                            <div style="font-size: 12px; font-weight: 600; margin-bottom: 5px;">${message.sender}</div>
+                            <div>${message.text}</div>
+                            <div class="message-time">${message.time}</div>
+                        </div>
+                    `;
+                }
+            });
+            
+            container.innerHTML = html;
+            container.scrollTop = container.scrollHeight;
+        }
+
+        function handleMessageKeydown(e) {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                sendMessage();
+            }
+        }
+
+        function sendMessage() {
+            if (!currentChat) {
+                showToast(currentLanguage === 'en' ? 'Please select a chat first' : 'කරුණාකර පළමුව සංවාදයක් තෝරන්න', 'warning');
+                return;
+            }
+            
+            const input = document.getElementById('message-input');
+            const text = input.value.trim();
+            
+            if (!text) return;
+            
+            const newMessage = {
+                id: messages.length + 1,
+                chatId: currentChat.id,
+                sender: currentLanguage === 'en' ? "You" : "ඔබ",
+                senderId: currentUser ? currentUser.id : "demo123",
+                senderLogo: currentUser ? currentUser.logo : "MB",
+                senderLogoUrl: currentProfilePicture,
+                text: text,
+                time: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}),
+                sent: true,
+                status: "sent",
+                timestamp: new Date().toISOString()
+            };
+            
+            messages.push(newMessage);
+            
+            // Update chat last message
+            currentChat.lastMessage = text;
+            currentChat.lastMessageTime = "Just now";
+            currentChat.unreadCount = 0;
+            
+            loadMessages();
+            loadChatList();
+            input.value = '';
+            
+            // Update UI
+            updateUnreadCounts();
+            
+            // Show "sent" status
+            setTimeout(() => {
+                newMessage.status = "delivered";
+                loadMessages();
+                
+                // Simulate typing indicator
+                document.getElementById('typing-indicator').style.display = 'flex';
+                
+                // Auto-reply after 1 second
+                setTimeout(() => {
+                    document.getElementById('typing-indicator').style.display = 'none';
+                    
+                    const replyText = currentLanguage === 'en' 
+                        ? "Thanks for your message! We'll get back to you soon." 
+                        : "ඔබේ පණිවිඩයට ස්තුතියි! අපි ඉක්මනින් ඔබට පිළිතුරු දෙන්නෙමු.";
+                    
+                    const reply = {
+                        id: messages.length + 1,
+                        chatId: currentChat.id,
+                        sender: currentChat.businessName,
+                        senderId: currentChat.businessId,
+                        senderLogo: currentChat.businessLogo,
+                        senderLogoUrl: "",
+                        text: replyText,
+                        time: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}),
+                        sent: false,
+                        status: "delivered",
+                        timestamp: new Date().toISOString()
+                    };
+                    messages.push(reply);
+                    
+                    // Update chat last message
+                    currentChat.lastMessage = replyText;
+                    currentChat.lastMessageTime = "Just now";
+                    currentChat.unreadCount = 1;
+                    
+                    loadMessages();
+                    loadChatList();
+                    updateUnreadCounts();
+                }, 2000);
+            }, 500);
+            
+            // Save to localStorage
+            saveToLocalStorage();
+        }
+
+        function updateUnreadCounts() {
+            const totalUnread = chats.reduce((sum, chat) => sum + chat.unreadCount, 0);
+            
+            // Update all unread counters
+            const counters = [
+                document.getElementById('navbar-unread-count'),
+                document.getElementById('sidebar-unread-count'),
+                document.getElementById('bottom-unread-count'),
+                document.getElementById('mobile-unread-count')
+            ];
+            
+            counters.forEach(counter => {
+                if (counter) {
+                    if (totalUnread > 0) {
+                        counter.textContent = totalUnread > 99 ? '99+' : totalUnread;
+                        counter.style.display = 'flex';
+                    } else {
+                        counter.style.display = 'none';
+                    }
+                }
+            });
+        }
+
+        function callBusiness() {
+            if (!currentChat) return;
+            showToast(currentLanguage === 'en' ? `Calling ${currentChat.businessName}...` : `${currentChat.businessName} අමතමින්...`, 'info');
         }
 
         // ===== NOTIFICATIONS =====
@@ -3593,6 +4539,18 @@
             });
             
             container.innerHTML = html;
+            
+            // Update notification badge
+            const unreadCount = notifications.filter(n => n.unread).length;
+            const badge = document.getElementById('navbar-notif-count');
+            if (badge) {
+                if (unreadCount > 0) {
+                    badge.textContent = unreadCount > 99 ? '99+' : unreadCount;
+                    badge.style.display = 'flex';
+                } else {
+                    badge.style.display = 'none';
+                }
+            }
         }
 
         function markNotificationAsRead(notificationId) {
@@ -3602,118 +4560,6 @@
                 loadNotifications();
                 showToast(currentLanguage === 'en' ? 'Notification marked as read' : 'දැනුම්දීම කියවූ ලෙස සලකුණු කරන ලදී');
             }
-        }
-
-        // ===== MESSENGER FUNCTIONS =====
-        function openMessenger() {
-            document.getElementById('messenger-window').classList.add('active');
-            loadMessages();
-        }
-
-        function closeMessenger() {
-            document.getElementById('messenger-window').classList.remove('active');
-        }
-
-        function loadMessages() {
-            const container = document.getElementById('messages-container');
-            
-            if (messages.length === 0) {
-                container.innerHTML = `
-                    <div style="text-align: center; padding: 40px 20px; color: var(--text-secondary);">
-                        <i class="far fa-comments" style="font-size: 40px; margin-bottom: 15px;"></i>
-                        <p>${currentLanguage === 'en' ? 'No messages yet' : 'තවම පණිවිඩ නොමැත'}</p>
-                    </div>
-                `;
-                return;
-            }
-            
-            let html = '';
-            messages.forEach(message => {
-                if (message.sent) {
-                    html += `
-                        <div class="message message-sent">
-                            <div>${message.text}</div>
-                            <div class="message-status">
-                                <span>${message.time}</span>
-                                <i class="fas fa-check${message.status === 'read' ? '-double' : ''}" style="margin-left: 5px;"></i>
-                            </div>
-                        </div>
-                    `;
-                } else {
-                    html += `
-                        <div class="message message-received">
-                            <div style="font-size: 12px; font-weight: 600; margin-bottom: 5px;">${message.sender}</div>
-                            <div>${message.text}</div>
-                            <div class="message-time">${message.time}</div>
-                        </div>
-                    `;
-                }
-            });
-            
-            container.innerHTML = html;
-            container.scrollTop = container.scrollHeight;
-        }
-
-        function handleMessageKeydown(e) {
-            if (e.key === 'Enter' && !e.shiftKey) {
-                e.preventDefault();
-                sendMessage();
-            }
-        }
-
-        function sendMessage() {
-            const input = document.getElementById('message-input');
-            const text = input.value.trim();
-            
-            if (!text) return;
-            
-            const newMessage = {
-                id: messages.length + 1,
-                sender: currentLanguage === 'en' ? "You" : "ඔබ",
-                senderLogo: "MB",
-                senderLogoUrl: currentProfilePicture,
-                text: text,
-                time: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}),
-                sent: true,
-                status: "sent"
-            };
-            
-            messages.push(newMessage);
-            loadMessages();
-            input.value = '';
-            
-            // Show "sent" status
-            setTimeout(() => {
-                newMessage.status = "delivered";
-                loadMessages();
-                
-                // Simulate typing indicator
-                document.getElementById('typing-indicator').style.display = 'flex';
-                
-                // Auto-reply after 1 second
-                setTimeout(() => {
-                    document.getElementById('typing-indicator').style.display = 'none';
-                    
-                    const reply = {
-                        id: messages.length + 1,
-                        sender: "TechHub Electronics",
-                        senderLogo: "TH",
-                        senderLogoUrl: "",
-                        text: currentLanguage === 'en' 
-                            ? "Thanks for your message! We'll get back to you soon with the catalog." 
-                            : "ඔබේ පණිවිඩයට ස්තුතියි! අපි ඉක්මනින් ඔබට කැටලොගය සමඟ පිළිතුරු දෙන්නෙමු.",
-                        time: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}),
-                        sent: false,
-                        status: "delivered"
-                    };
-                    messages.push(reply);
-                    loadMessages();
-                }, 2000);
-            }, 500);
-        }
-
-        function callBusiness() {
-            showToast(currentLanguage === 'en' ? 'Calling TechHub Electronics...' : 'TechHub Electronics අමතමින්...', 'info');
         }
 
         // ===== PROFILE FUNCTIONS =====
@@ -3790,6 +4636,28 @@
             
             // Save to localStorage
             localStorage.setItem('tradeConnectUser', JSON.stringify(currentUser));
+            
+            // If Firebase is initialized, update in Firestore
+            if (firebaseInitialized && db && currentUser.id) {
+                updateUserInFirebase();
+            }
+        }
+
+        async function updateUserInFirebase() {
+            try {
+                await db.collection('users').doc(currentUser.id).update({
+                    name: currentUser.name,
+                    logo: currentUser.logo,
+                    category: currentUser.category,
+                    description: currentUser.description,
+                    phone: currentUser.phone,
+                    address: currentUser.address,
+                    updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                });
+                console.log('User updated in Firebase');
+            } catch (error) {
+                console.error('Error updating user in Firebase:', error);
+            }
         }
 
         // ===== POST INTERACTIONS =====
@@ -3824,8 +4692,7 @@
         }
 
         function messageBusiness(businessId) {
-            openMessenger();
-            showToast(currentLanguage === 'en' ? 'Messaging business...' : 'ව්‍යාපාරයට පණිවිඩ යවමින්...', 'info');
+            openChat(businessId);
         }
 
         // ===== MODAL FUNCTIONS =====
@@ -3912,7 +4779,8 @@
                 category: currentUser ? currentUser.category : "electronics",
                 timestamp: currentLanguage === 'en' ? "Just now" : "දැන්ම",
                 createdAt: new Date().toISOString(),
-                userReaction: null
+                userReaction: null,
+                userId: currentUser ? currentUser.id : "demo123"
             };
             
             // Add product/offer specific fields
@@ -3933,8 +4801,16 @@
             closeModal('post-modal');
             showToast(currentLanguage === 'en' ? 'Post published!' : 'පළ කිරීම ප්‍රකාශයට පත් කරන ලදී!', 'success');
             
+            // Update post count
+            updatePostCount();
+            
             // Save to localStorage
             saveToLocalStorage();
+            
+            // If Firebase is initialized, save to Firestore
+            if (firebaseInitialized && db && currentUser) {
+                savePostToFirebase(newPost);
+            }
         }
 
         function openSettings() {
@@ -4065,6 +4941,7 @@
             
             if (confirm(message)) {
                 currentUser = null;
+                currentChat = null;
                 localStorage.removeItem('tradeConnectUser');
                 pageHistory = ['home'];
                 showLoginScreen();
@@ -4108,6 +4985,8 @@
 
         function saveToLocalStorage() {
             localStorage.setItem('tradeConnectPosts', JSON.stringify(posts));
+            localStorage.setItem('tradeConnectChats', JSON.stringify(chats));
+            localStorage.setItem('tradeConnectMessages', JSON.stringify(messages));
             if (currentUser) {
                 localStorage.setItem('tradeConnectUser', JSON.stringify(currentUser));
             }
@@ -4115,6 +4994,17 @@
 
         // Initialize
         console.log('TradeConnect App Loaded Successfully!');
+        console.log('Features included:');
+        console.log('1. Real-time post system with Firebase integration');
+        console.log('2. Full mobile-responsive design with hamburger menu');
+        console.log('3. Complete reactions system (like, love, care, wow, haha, sad, angry)');
+        console.log('4. Edit and delete posts functionality');
+        console.log('5. Real chat system with multiple conversations');
+        console.log('6. Profile picture upload and management');
+        console.log('7. Search functionality across all pages');
+        console.log('8. Dual language support (English/Sinhala)');
+        console.log('9. Dark/Light theme toggle');
+        console.log('10. Quick tips in settings');
     </script>
 </body>
 </html>
