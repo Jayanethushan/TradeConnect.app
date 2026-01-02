@@ -1,0 +1,4120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>TradeConnect | Wholesale Business Network</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-storage-compat.js"></script>
+    
+    <style>
+        /* ===== GLOBAL VARIABLES & RESET ===== */
+        :root {
+            /* Light Theme Colors */
+            --primary: #1877F2;
+            --primary-light: #E7F3FF;
+            --primary-dark: #166FE5;
+            --secondary: #42B72A;
+            --secondary-light: #E7F4E7;
+            --accent: #F02849;
+            --text-primary: #050505;
+            --text-secondary: #65676B;
+            --text-tertiary: #8A8D91;
+            --background: #F0F2F5;
+            --card-bg: #FFFFFF;
+            --card-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+            --card-shadow-hover: 0 2px 8px rgba(0, 0, 0, 0.15);
+            --border-color: #DADDE1;
+            --glass-bg: rgba(255, 255, 255, 0.8);
+            --glass-border: rgba(255, 255, 255, 0.2);
+            --hover-bg: #F2F2F2;
+            --success: #31A24C;
+            --warning: #F7B928;
+            --danger: #F02849;
+            --gradient-primary: linear-gradient(135deg, #1877F2 0%, #0D5EBA 100%);
+            --gradient-secondary: linear-gradient(135deg, #42B72A 0%, #2E8B1C 100%);
+            
+            /* Reaction Colors */
+            --like: #1877F2;
+            --love: #F02849;
+            --care: #F7B928;
+            --wow: #F7B928;
+            --haha: #F7B928;
+            --sad: #F7B928;
+            --angry: #E74C3C;
+        }
+
+        [data-theme="dark"] {
+            /* Dark Theme Colors */
+            --primary: #2D88FF;
+            --primary-light: rgba(45, 136, 255, 0.2);
+            --primary-dark: #1B74E4;
+            --secondary: #31A24C;
+            --secondary-light: rgba(49, 162, 76, 0.2);
+            --accent: #F02849;
+            --text-primary: #E4E6EB;
+            --text-secondary: #B0B3B8;
+            --text-tertiary: #8A8D91;
+            --background: #18191A;
+            --card-bg: #242526;
+            --card-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+            --card-shadow-hover: 0 2px 8px rgba(0, 0, 0, 0.5);
+            --border-color: #3E4042;
+            --glass-bg: rgba(36, 37, 38, 0.8);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --hover-bg: #3A3B3C;
+            --success: #31A24C;
+            --warning: #F7B928;
+            --danger: #F02849;
+            --gradient-primary: linear-gradient(135deg, #2D88FF 0%, #1B74E4 100%);
+            --gradient-secondary: linear-gradient(135deg, #31A24C 0%, #2E8B1C 100%);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            transition: background-color 0.3s ease, border-color 0.3s ease;
+        }
+
+        body {
+            font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background-color: var(--background);
+            color: var(--text-primary);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        /* ===== SPLASH SCREEN ===== */
+        #splash-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #1877F2 0%, #0D5EBA 100%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            transition: opacity 0.5s ease;
+        }
+
+        .splash-logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 30px;
+            animation: logoBounce 1s ease infinite alternate;
+        }
+
+        .splash-logo-icon {
+            width: 80px;
+            height: 80px;
+            background: white;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #1877F2;
+            font-size: 40px;
+        }
+
+        .splash-title {
+            font-size: 36px;
+            color: white;
+            font-weight: 700;
+        }
+
+        .splash-subtitle {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 16px;
+            margin-bottom: 40px;
+        }
+
+        .splash-loader {
+            width: 60px;
+            height: 60px;
+            border: 4px solid rgba(255, 255, 255, 0.2);
+            border-top-color: white;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes logoBounce {
+            from { transform: translateY(0); }
+            to { transform: translateY(-10px); }
+        }
+
+        /* ===== GLASSMORPHISM EFFECTS ===== */
+        .glass {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        .glass-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            box-shadow: var(--card-shadow);
+            overflow: hidden;
+        }
+
+        /* ===== MOBILE MENU DRAWER ===== */
+        .mobile-menu-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(5px);
+            z-index: 999;
+            display: none;
+        }
+
+        .mobile-menu-overlay.active {
+            display: block;
+        }
+
+        .mobile-menu-drawer {
+            position: fixed;
+            top: 0;
+            left: -280px;
+            width: 280px;
+            height: 100%;
+            background: var(--card-bg);
+            border-right: 1px solid var(--border-color);
+            z-index: 1000;
+            transition: left 0.3s ease;
+            overflow-y: auto;
+            padding: 20px;
+        }
+
+        .mobile-menu-drawer.active {
+            left: 0;
+        }
+
+        /* ===== LAYOUT ===== */
+        .app-container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Desktop Sidebar - Mobile වලට හැඩවන */
+        .desktop-sidebar {
+            width: 280px;
+            background: var(--card-bg);
+            border-right: 1px solid var(--border-color);
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            overflow-y: auto;
+            z-index: 100;
+            padding: 20px;
+        }
+
+        /* Main Content Area */
+        .main-content {
+            flex: 1;
+            margin-left: 280px;
+            min-height: 100vh;
+            padding-bottom: 80px;
+        }
+
+        /* ===== HEADER ===== */
+        .navbar {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            padding: 15px 20px;
+            background: var(--card-bg);
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--gradient-primary);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 20px;
+        }
+
+        /* Hamburger Menu Button - Mobile Only */
+        .menu-toggle {
+            display: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            background: var(--hover-bg);
+            border: none;
+            color: var(--text-primary);
+            cursor: pointer;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .nav-btn {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--hover-bg);
+            color: var(--text-primary);
+            cursor: pointer;
+            position: relative;
+            transition: all 0.3s ease;
+            touch-action: manipulation;
+        }
+
+        .nav-btn:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: var(--danger);
+            color: white;
+            font-size: 12px;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+        }
+
+        .user-menu {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 12px;
+            border-radius: 25px;
+            background: var(--hover-bg);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-height: 44px;
+        }
+
+        .user-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: var(--gradient-primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: 16px;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+
+        /* Language Switcher */
+        .language-switcher {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 12px;
+            border-radius: 25px;
+            background: var(--hover-bg);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            font-size: 14px;
+        }
+
+        .language-switcher:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        .language-switcher i {
+            font-size: 16px;
+        }
+
+        /* ===== SEARCH BAR ===== */
+        .search-container {
+            padding: 15px 20px;
+            background: var(--card-bg);
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
+            top: 74px;
+            z-index: 99;
+        }
+
+        .search-box-container {
+            position: relative;
+        }
+
+        .search-box {
+            width: 100%;
+            padding: 16px 20px 16px 50px;
+            border-radius: 25px;
+            border: 1px solid var(--border-color);
+            background: var(--hover-bg);
+            color: var(--text-primary);
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .search-box:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(24, 119, 242, 0.2);
+            background: var(--card-bg);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-secondary);
+            font-size: 18px;
+        }
+
+        /* ===== CREATE POST ===== */
+        .create-post-card {
+            padding: 20px;
+            margin: 20px;
+            border-radius: 16px;
+            background: var(--card-bg);
+            box-shadow: var(--card-shadow);
+        }
+
+        .post-input-container {
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .post-input {
+            flex: 1;
+            padding: 16px;
+            border-radius: 20px;
+            border: 1px solid var(--border-color);
+            background: var(--hover-bg);
+            color: var(--text-primary);
+            font-size: 16px;
+            resize: none;
+            min-height: 80px;
+            transition: all 0.3s ease;
+        }
+
+        .post-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            background: var(--card-bg);
+        }
+
+        .post-actions {
+            display: flex;
+            gap: 12px;
+            padding-top: 15px;
+            border-top: 1px solid var(--border-color);
+            flex-wrap: wrap;
+        }
+
+        .post-action-btn {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 14px 12px;
+            border-radius: 12px;
+            background: var(--hover-bg);
+            color: var(--text-primary);
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            min-height: 48px;
+            min-width: 48px;
+            touch-action: manipulation;
+        }
+
+        .post-action-btn:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        /* ===== FEED POSTS ===== */
+        .feed-posts {
+            padding: 0 20px 20px;
+        }
+
+        .post-card {
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 16px;
+            background: var(--card-bg);
+            box-shadow: var(--card-shadow);
+            animation: fadeIn 0.3s ease;
+            position: relative;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .post-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 15px;
+        }
+
+        .post-user {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .post-user-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: var(--gradient-primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: 18px;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+
+        .post-user-info h4 {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .post-time {
+            font-size: 13px;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .post-visibility {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            background: var(--hover-bg);
+            color: var(--text-secondary);
+        }
+
+        .post-content {
+            font-size: 15px;
+            line-height: 1.6;
+            margin-bottom: 15px;
+            color: var(--text-primary);
+            padding: 0 5px;
+        }
+
+        .post-stats {
+            display: flex;
+            justify-content: space-between;
+            padding: 15px 0;
+            border-top: 1px solid var(--border-color);
+            border-bottom: 1px solid var(--border-color);
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-bottom: 10px;
+            align-items: center;
+        }
+
+        .post-actions-bar {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+        }
+
+        .post-interaction-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 12px 10px;
+            border-radius: 8px;
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            min-height: 44px;
+            min-width: 44px;
+            touch-action: manipulation;
+            position: relative;
+            user-select: none;
+        }
+
+        .post-interaction-btn:hover {
+            background: var(--hover-bg);
+            color: var(--primary);
+        }
+
+        .post-interaction-btn.active {
+            color: var(--primary);
+            background: var(--primary-light);
+        }
+
+        /* ===== REACTIONS ===== */
+        .reactions-container {
+            position: absolute;
+            bottom: 50px;
+            left: 20px;
+            background: var(--card-bg);
+            border-radius: 25px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+            display: none;
+            padding: 5px;
+            z-index: 10;
+            border: 1px solid var(--border-color);
+        }
+
+        .reactions-container.active {
+            display: flex;
+            animation: popIn 0.2s ease;
+        }
+
+        @keyframes popIn {
+            from {
+                opacity: 0;
+                transform: scale(0.8) translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+
+        .reaction-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+            position: relative;
+        }
+
+        .reaction-btn:hover {
+            transform: scale(1.2) translateY(-5px);
+        }
+
+        .reaction-btn.like:hover { color: var(--like); }
+        .reaction-btn.love:hover { color: var(--love); }
+        .reaction-btn.care:hover { color: var(--care); }
+        .reaction-btn.wow:hover { color: var(--wow); }
+        .reaction-btn.haha:hover { color: var(--haha); }
+        .reaction-btn.sad:hover { color: var(--sad); }
+        .reaction-btn.angry:hover { color: var(--angry); }
+
+        .reaction-tooltip {
+            position: absolute;
+            top: -30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-size: 12px;
+            white-space: nowrap;
+            opacity: 0;
+            transition: opacity 0.2s ease;
+            pointer-events: none;
+        }
+
+        .reaction-btn:hover .reaction-tooltip {
+            opacity: 1;
+        }
+
+        /* Reaction Preview */
+        .reaction-preview {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .reaction-count {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        /* ===== SIDEBAR NAVIGATION ===== */
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 12px 15px;
+            margin-bottom: 8px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: var(--text-primary);
+            text-decoration: none;
+            position: relative;
+        }
+
+        .nav-item:hover {
+            background: var(--hover-bg);
+        }
+
+        .nav-item.active {
+            background: var(--primary-light);
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        .nav-icon {
+            width: 28px;
+            height: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+
+        .nav-text {
+            font-size: 15px;
+            font-weight: 500;
+        }
+
+        /* ===== BOTTOM NAVIGATION (MOBILE) ===== */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: var(--card-bg);
+            border-top: 1px solid var(--border-color);
+            display: none;
+            justify-content: space-around;
+            padding: 12px 10px;
+            z-index: 100;
+        }
+
+        .nav-tab {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            padding: 8px 12px;
+            border-radius: 12px;
+            background: transparent;
+            border: none;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-width: 70px;
+            touch-action: manipulation;
+        }
+
+        .nav-tab.active {
+            color: var(--primary);
+            background: var(--primary-light);
+        }
+
+        .nav-tab i {
+            font-size: 22px;
+        }
+
+        .nav-tab span {
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        /* ===== PAGES ===== */
+        .page {
+            display: none;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        /* ===== PROFILE SECTION ===== */
+        .profile-section {
+            padding: 20px;
+        }
+
+        .profile-header {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .profile-avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 25px;
+            background: var(--gradient-primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 32px;
+            font-weight: 600;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            position: relative;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .profile-avatar:hover {
+            transform: scale(1.05);
+        }
+
+        .profile-avatar-edit {
+            position: absolute;
+            bottom: 5px;
+            right: 5px;
+            background: var(--primary);
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            cursor: pointer;
+            border: 2px solid var(--card-bg);
+        }
+
+        .profile-info {
+            flex: 1;
+        }
+
+        .profile-info h3 {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .profile-category {
+            display: inline-block;
+            padding: 6px 12px;
+            background: var(--primary-light);
+            color: var(--primary);
+            border-radius: 12px;
+            font-size: 13px;
+            font-weight: 500;
+        }
+
+        .profile-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            padding: 20px;
+            background: var(--hover-bg);
+            border-radius: 12px;
+            margin-bottom: 20px;
+        }
+
+        .profile-stat {
+            text-align: center;
+        }
+
+        .profile-stat-value {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .profile-stat-label {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        /* ===== NOTIFICATIONS PAGE ===== */
+        .notifications-page {
+            padding: 20px;
+        }
+
+        .notification-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+            padding: 16px;
+            margin-bottom: 12px;
+            background: var(--card-bg);
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            transition: all 0.3s ease;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .notification-item.unread {
+            background: var(--primary-light);
+            border-color: var(--primary);
+        }
+
+        /* ===== MESSENGER WINDOW ===== */
+        .messenger-window {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 380px;
+            height: 600px;
+            background: var(--card-bg);
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            display: none;
+            flex-direction: column;
+            z-index: 1000;
+            border: 1px solid var(--border-color);
+            overflow: hidden;
+        }
+
+        .messenger-window.active {
+            display: flex;
+        }
+
+        .messenger-header {
+            padding: 20px;
+            background: var(--primary);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .messenger-body {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .messages-container {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .message {
+            max-width: 80%;
+            padding: 10px 15px;
+            border-radius: 18px;
+            position: relative;
+        }
+
+        .message-sent {
+            align-self: flex-end;
+            background: var(--primary);
+            color: white;
+            border-bottom-right-radius: 5px;
+        }
+
+        .message-received {
+            align-self: flex-start;
+            background: var(--hover-bg);
+            color: var(--text-primary);
+            border-bottom-left-radius: 5px;
+        }
+
+        .message-input-container {
+            padding: 20px;
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            gap: 10px;
+        }
+
+        .message-input {
+            flex: 1;
+            padding: 12px 20px;
+            border-radius: 25px;
+            border: 1px solid var(--border-color);
+            background: var(--hover-bg);
+            color: var(--text-primary);
+            font-size: 16px;
+        }
+
+        /* WhatsApp-like features */
+        .message-status {
+            font-size: 11px;
+            opacity: 0.7;
+            margin-top: 2px;
+            text-align: right;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 2px;
+        }
+
+        .message-time {
+            font-size: 11px;
+            opacity: 0.7;
+            margin-top: 2px;
+        }
+
+        .online-indicator {
+            width: 8px;
+            height: 8px;
+            background: #4CAF50;
+            border-radius: 50%;
+            margin-left: 5px;
+        }
+
+        .typing-indicator {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            padding: 10px;
+            color: var(--text-secondary);
+            font-size: 12px;
+        }
+
+        .typing-dots {
+            display: flex;
+            gap: 2px;
+        }
+
+        .typing-dots span {
+            width: 6px;
+            height: 6px;
+            background: var(--text-secondary);
+            border-radius: 50%;
+            animation: typing 1.4s infinite;
+        }
+
+        .typing-dots span:nth-child(2) { animation-delay: 0.2s; }
+        .typing-dots span:nth-child(3) { animation-delay: 0.4s; }
+
+        @keyframes typing {
+            0%, 60%, 100% { transform: translateY(0); }
+            30% { transform: translateY(-5px); }
+        }
+
+        /* ===== MODALS ===== */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(5px);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+            padding: 20px;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal {
+            width: 100%;
+            max-width: 500px;
+            max-height: 90vh;
+            overflow-y: auto;
+            border-radius: 20px;
+            animation: modalSlideIn 0.3s ease;
+            background: var(--card-bg);
+            box-shadow: var(--card-shadow-hover);
+        }
+
+        @keyframes modalSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .modal-header {
+            padding: 25px 25px 15px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .modal-back-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--hover-bg);
+            border: none;
+            color: var(--text-primary);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .modal-back-btn:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        .modal-title {
+            font-size: 20px;
+            font-weight: 600;
+            flex: 1;
+        }
+
+        .modal-body {
+            padding: 25px;
+        }
+
+        .modal-footer {
+            padding: 20px 25px;
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            gap: 15px;
+        }
+
+        /* Profile Picture Upload */
+        .profile-picture-upload {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .profile-picture-preview {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            margin: 0 auto 20px;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            border: 3px solid var(--primary);
+            position: relative;
+        }
+
+        .upload-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 24px;
+            background: var(--primary);
+            color: white;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .upload-btn:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+
+        /* Form Elements */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+
+        .form-input, .form-select, .form-textarea {
+            width: 100%;
+            padding: 14px 15px;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            background: var(--hover-bg);
+            color: var(--text-primary);
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .form-textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .form-input:focus, .form-select:focus, .form-textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(24, 119, 242, 0.1);
+            background: var(--card-bg);
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 14px 24px;
+            border-radius: 12px;
+            border: none;
+            font-size: 15px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            min-height: 48px;
+            min-width: 48px;
+            touch-action: manipulation;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(24, 119, 242, 0.3);
+        }
+
+        .btn-secondary {
+            background: var(--hover-bg);
+            color: var(--text-primary);
+        }
+
+        .btn-secondary:hover {
+            background: var(--border-color);
+            transform: translateY(-2px);
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 1px solid var(--primary);
+            color: var(--primary);
+        }
+
+        .btn-outline:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        /* ===== RESPONSIVE DESIGN ===== */
+        @media (max-width: 768px) {
+            .menu-toggle {
+                display: flex;
+            }
+            
+            .desktop-sidebar {
+                display: none;
+            }
+            
+            .main-content {
+                margin-left: 0;
+                width: 100%;
+            }
+            
+            .bottom-nav {
+                display: flex;
+            }
+            
+            .search-container {
+                top: 74px;
+            }
+            
+            .create-post-card,
+            .feed-posts {
+                margin: 15px 10px;
+                padding: 15px;
+            }
+            
+            .post-actions-bar {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .post-action-btn {
+                font-size: 13px;
+            }
+            
+            .messenger-window {
+                width: 100%;
+                height: 100vh;
+                bottom: 0;
+                right: 0;
+                border-radius: 0;
+            }
+            
+            .language-switcher {
+                display: none;
+            }
+            
+            .reactions-container {
+                bottom: 60px;
+                left: 10px;
+            }
+            
+            .profile-header {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .profile-avatar {
+                width: 120px;
+                height: 120px;
+            }
+        }
+
+        @media (min-width: 769px) {
+            .mobile-menu-overlay,
+            .mobile-menu-drawer,
+            .bottom-nav {
+                display: none !important;
+            }
+        }
+
+        /* Utility Classes */
+        .hidden {
+            display: none !important;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        .loader {
+            border: 4px solid var(--border-color);
+            border-top: 4px solid var(--primary);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        /* Keyboard Focus Styles */
+        :focus {
+            outline: 2px solid var(--primary);
+            outline-offset: 2px;
+        }
+        
+        /* Skip to Content Link */
+        .skip-to-content {
+            position: absolute;
+            top: -40px;
+            left: 10px;
+            background: var(--primary);
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+            text-decoration: none;
+            z-index: 9999;
+        }
+        
+        .skip-to-content:focus {
+            top: 10px;
+        }
+        
+        /* Back Button for Mobile */
+        .mobile-back-btn {
+            display: none;
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 1001;
+            background: var(--primary);
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+        
+        @media (max-width: 768px) {
+            .mobile-back-btn {
+                display: flex;
+            }
+        }
+        
+        /* Toast notifications */
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--primary);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 25px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            z-index: 3000;
+            font-weight: 500;
+            animation: toastSlideUp 0.3s ease;
+            white-space: nowrap;
+            max-width: 90%;
+            text-align: center;
+        }
+        
+        @keyframes toastSlideUp {
+            from { transform: translate(-50%, 100%); opacity: 0; }
+            to { transform: translate(-50%, 0); opacity: 1; }
+        }
+        
+        @keyframes toastSlideDown {
+            from { transform: translate(-50%, 0); opacity: 1; }
+            to { transform: translate(-50%, 100%); opacity: 0; }
+        }
+    </style>
+</head>
+<body data-theme="light">
+    <!-- Splash Screen -->
+    <div id="splash-screen">
+        <div class="splash-logo">
+            <div class="splash-logo-icon">
+                <i class="fas fa-handshake"></i>
+            </div>
+            <h1 class="splash-title">TradeConnect</h1>
+        </div>
+        <p class="splash-subtitle">Connecting wholesale businesses worldwide</p>
+        <div class="splash-loader"></div>
+    </div>
+
+    <!-- Login Screen -->
+    <div id="login-screen" class="hidden">
+        <div style="min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px; background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);">
+            <div class="glass-card" style="width: 100%; max-width: 400px; padding: 40px; text-align: center;">
+                <div style="display: flex; align-items: center; justify-content: center; gap: 15px; margin-bottom: 30px;">
+                    <div class="logo-icon" style="width: 60px; height: 60px; font-size: 28px;">
+                        <i class="fas fa-handshake"></i>
+                    </div>
+                    <h1 style="font-size: 28px; color: white;">TradeConnect</h1>
+                </div>
+                <p style="color: rgba(255, 255, 255, 0.8); margin-bottom: 30px;">Connect with wholesale businesses</p>
+                
+                <div class="form-group">
+                    <input type="email" id="login-email" class="form-input" placeholder="Business Email" data-i18n="emailPlaceholder">
+                </div>
+                
+                <div class="form-group">
+                    <input type="password" id="login-password" class="form-input" placeholder="Password" data-i18n="passwordPlaceholder">
+                </div>
+                
+                <div class="form-group">
+                    <div id="login-error" style="color: var(--danger); font-size: 14px; display: none;"></div>
+                </div>
+                
+                <button class="btn btn-primary" style="width: 100%; margin-bottom: 20px;" onclick="handleLogin()">
+                    <i class="fas fa-sign-in-alt"></i> <span data-i18n="login">Login</span>
+                </button>
+                
+                <div style="margin: 25px 0; position: relative;">
+                    <div style="height: 1px; background: var(--border-color);"></div>
+                    <div style="position: absolute; top: -10px; left: 50%; transform: translateX(-50%); background: var(--glass-bg); padding: 0 15px; color: var(--text-secondary); font-size: 14px;">
+                        <span data-i18n="or">OR</span>
+                    </div>
+                </div>
+                
+                <button class="btn btn-outline" style="width: 100%; margin-bottom: 20px;" onclick="openRegisterModal()">
+                    <i class="fas fa-user-plus"></i> <span data-i18n="createAccount">Create Business Account</span>
+                </button>
+                
+                <button class="btn btn-secondary" style="width: 100%;" onclick="quickLogin()">
+                    <i class="fas fa-bolt"></i> <span data-i18n="quickDemo">Quick Demo Access</span>
+                </button>
+                
+                <!-- Language Selector in Login -->
+                <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid var(--border-color);">
+                    <div style="display: flex; justify-content: center; gap: 15px;">
+                        <button onclick="changeLanguage('en')" style="background: none; border: 2px solid white; cursor: pointer; padding: 10px 20px; border-radius: 8px; transition: background 0.3s; color: white; min-width: 100px;">
+                            English
+                        </button>
+                        <button onclick="changeLanguage('si')" style="background: none; border: 2px solid white; cursor: pointer; padding: 10px 20px; border-radius: 8px; transition: background 0.3s; color: white; min-width: 100px;">
+                            සිංහල
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Enter Key Hint -->
+                <div style="margin-top: 20px; font-size: 12px; color: rgba(255, 255, 255, 0.7);">
+                    <i class="fas fa-keyboard"></i> <span data-i18n="enterHint">Press Enter to post messages</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main App -->
+    <div id="main-app" class="hidden">
+        <!-- Mobile Back Button -->
+        <div class="mobile-back-btn" onclick="goBack()">
+            <i class="fas fa-arrow-left"></i>
+        </div>
+
+        <!-- App Container -->
+        <div class="app-container">
+            <!-- Desktop Sidebar -->
+            <div class="desktop-sidebar">
+                <div class="logo" style="margin-bottom: 40px;">
+                    <div class="logo-icon">
+                        <i class="fas fa-handshake"></i>
+                    </div>
+                    <span>TradeConnect</span>
+                </div>
+                
+                <div class="nav-item active" onclick="switchPage('home')">
+                    <div class="nav-icon">
+                        <i class="fas fa-home"></i>
+                    </div>
+                    <div class="nav-text" data-i18n="home">Home</div>
+                </div>
+                
+                <div class="nav-item" onclick="switchPage('network')">
+                    <div class="nav-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div class="nav-text" data-i18n="network">Network</div>
+                </div>
+                
+                <div class="nav-item" onclick="openMessenger()">
+                    <div class="nav-icon">
+                        <i class="fas fa-comments"></i>
+                    </div>
+                    <div class="nav-text" data-i18n="messages">Messages</div>
+                </div>
+                
+                <div class="nav-item" onclick="switchPage('notifications')">
+                    <div class="nav-icon">
+                        <i class="fas fa-bell"></i>
+                    </div>
+                    <div class="nav-text" data-i18n="notifications">Notifications</div>
+                </div>
+                
+                <div class="nav-item" onclick="switchPage('profile')">
+                    <div class="nav-icon">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <div class="nav-text" data-i18n="profile">Profile</div>
+                </div>
+                
+                <div class="nav-item" onclick="openSettings()">
+                    <div class="nav-icon">
+                        <i class="fas fa-cog"></i>
+                    </div>
+                    <div class="nav-text" data-i18n="settings">Settings</div>
+                </div>
+                
+                <!-- Language Selector in Desktop Sidebar -->
+                <div style="margin-top: 40px; padding-top: 20px; border-top: 1px solid var(--border-color);">
+                    <div style="font-size: 12px; color: var(--text-secondary); margin-bottom: 10px;" data-i18n="language">Language</div>
+                    <div style="display: flex; flex-direction: column; gap: 10px;">
+                        <button onclick="changeLanguage('en')" style="background: var(--hover-bg); border: none; padding: 12px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; gap: 10px; text-align: left; color: var(--text-primary);">
+                            <i class="fas fa-language"></i>
+                            <span>English</span>
+                        </button>
+                        <button onclick="changeLanguage('si')" style="background: var(--hover-bg); border: none; padding: 12px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; gap: 10px; text-align: left; color: var(--text-primary);">
+                            <i class="fas fa-language"></i>
+                            <span>සිංහල</span>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Quick Tips -->
+                <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid var(--border-color);">
+                    <div style="font-size: 12px; color: var(--text-secondary); margin-bottom: 10px;">Quick Tips</div>
+                    <div style="font-size: 11px; color: var(--text-tertiary);">
+                        <div>• Enter to post messages</div>
+                        <div>• Hover for reactions</div>
+                        <div>• Click profile to upload DP</div>
+                        <div>• Press & hold for message options</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Main Content -->
+            <div class="main-content">
+                <!-- Navbar -->
+                <nav class="navbar">
+                    <button class="menu-toggle" onclick="toggleMobileMenu()" aria-label="Toggle menu">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    
+                    <div class="logo">
+                        <div class="logo-icon">
+                            <i class="fas fa-handshake"></i>
+                        </div>
+                        <span>TradeConnect</span>
+                    </div>
+                    
+                    <div class="nav-actions">
+                        <!-- Language Switcher -->
+                        <div class="language-switcher" onclick="toggleLanguageMenu()" aria-label="Change language">
+                            <i class="fas fa-globe"></i>
+                            <span id="current-language">EN</span>
+                        </div>
+                        
+                        <div class="nav-btn" onclick="openMessenger()" aria-label="Open messages">
+                            <i class="fas fa-comments"></i>
+                            <div class="notification-badge">3</div>
+                        </div>
+                        
+                        <div class="nav-btn" onclick="switchPage('notifications')" aria-label="Open notifications">
+                            <i class="fas fa-bell"></i>
+                            <div class="notification-badge">5</div>
+                        </div>
+                        
+                        <div class="nav-btn" onclick="toggleTheme()" id="theme-toggle-btn" aria-label="Toggle theme">
+                            <i class="fas fa-moon"></i>
+                        </div>
+                        
+                        <div class="user-menu" onclick="openSettings()" aria-label="Open settings">
+                            <div class="user-avatar" id="user-avatar" style="background-image: url('');">MB</div>
+                            <span id="user-name">My Business</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                    </div>
+                </nav>
+
+                <!-- Language Dropdown Menu -->
+                <div id="language-menu" style="position: absolute; top: 70px; right: 170px; background: var(--card-bg); border-radius: 12px; box-shadow: var(--card-shadow-hover); border: 1px solid var(--border-color); display: none; z-index: 200; width: 150px;">
+                    <div style="padding: 10px;">
+                        <button onclick="changeLanguage('en')" style="width: 100%; background: none; border: none; padding: 12px; cursor: pointer; display: flex; align-items: center; gap: 10px; border-radius: 8px; color: var(--text-primary); text-align: left;">
+                            <i class="fas fa-language"></i>
+                            <span>English</span>
+                        </button>
+                        <button onclick="changeLanguage('si')" style="width: 100%; background: none; border: none; padding: 12px; cursor: pointer; display: flex; align-items: center; gap: 10px; border-radius: 8px; color: var(--text-primary); text-align: left;">
+                            <i class="fas fa-language"></i>
+                            <span>සිංහල</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Search Bar -->
+                <div class="search-container">
+                    <div class="search-box-container">
+                        <i class="fas fa-search search-icon"></i>
+                        <input type="text" class="search-box" id="global-search" placeholder="Search businesses, products, or categories..." onkeyup="searchContent()" data-i18n="searchPlaceholder">
+                    </div>
+                </div>
+
+                <!-- Pages -->
+                <!-- Home Page -->
+                <div id="home-page" class="page active">
+                    <!-- Create Post -->
+                    <div class="create-post-card">
+                        <div class="post-input-container">
+                            <div class="user-avatar" id="current-user-avatar" style="background-image: url('');">MB</div>
+                            <textarea class="post-input" id="post-content" placeholder="What's new in your wholesale business?" data-i18n="postPlaceholder"></textarea>
+                        </div>
+                        
+                        <div class="post-actions">
+                            <button class="post-action-btn" onclick="openPostModal('photo')">
+                                <i class="fas fa-image"></i> <span data-i18n="photoVideo">Photo/Video</span>
+                            </button>
+                            <button class="post-action-btn" onclick="openPostModal('product')">
+                                <i class="fas fa-tag"></i> <span data-i18n="product">Product</span>
+                            </button>
+                            <button class="post-action-btn" onclick="openPostModal('offer')">
+                                <i class="fas fa-percentage"></i> <span data-i18n="offer">Offer</span>
+                            </button>
+                            <select id="post-visibility" class="form-select" style="flex: 0 0 150px;">
+                                <option value="public" data-i18n="public">🌍 Public</option>
+                                <option value="followers" data-i18n="followers">👥 Followers</option>
+                                <option value="private" data-i18n="private">🔒 Private</option>
+                            </select>
+                            <button class="post-action-btn" onclick="createPost()" style="background: var(--primary); color: white;">
+                                <i class="fas fa-paper-plane"></i> <span data-i18n="post">Post</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Feed Posts -->
+                    <div class="feed-posts" id="feed-posts">
+                        <!-- Posts will be loaded here -->
+                    </div>
+                </div>
+
+                <!-- Network Page -->
+                <div id="network-page" class="page">
+                    <div style="padding: 40px 20px; text-align: center;">
+                        <div class="user-avatar" style="width: 80px; height: 80px; margin: 0 auto 20px; font-size: 32px;">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <h2 style="margin-bottom: 10px;" data-i18n="businessNetwork">Business Network</h2>
+                        <p style="color: var(--text-secondary); margin-bottom: 30px;" data-i18n="connectBusinesses">
+                            Connect with other wholesale businesses
+                        </p>
+                        <div id="business-list" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 20px; margin-top: 30px;">
+                            <!-- Businesses will be loaded here -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Notifications Page -->
+                <div id="notifications-page" class="page">
+                    <div class="notifications-page">
+                        <div style="padding: 20px;">
+                            <h2 style="margin-bottom: 20px;" data-i18n="notifications">Notifications</h2>
+                            <div id="notifications-list">
+                                <!-- Notifications will be loaded here -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Profile Page -->
+                <div id="profile-page" class="page">
+                    <div class="profile-section">
+                        <div class="profile-header">
+                            <div class="profile-avatar" id="profile-avatar" style="background-image: url('');">
+                                <div class="profile-avatar-edit" onclick="openProfilePictureModal()">
+                                    <i class="fas fa-camera"></i>
+                                </div>
+                            </div>
+                            <div class="profile-info">
+                                <h3 id="profile-name">My Business</h3>
+                                <div class="profile-category" id="profile-category">Electronics</div>
+                            </div>
+                        </div>
+                        
+                        <p style="color: var(--text-secondary); font-size: 15px; margin-bottom: 20px; line-height: 1.6;" id="profile-description">
+                            Your business description will appear here
+                        </p>
+                        
+                        <div class="profile-stats">
+                            <div class="profile-stat">
+                                <div class="profile-stat-value" id="stat-followers">0</div>
+                                <div class="profile-stat-label" data-i18n="followers">Followers</div>
+                            </div>
+                            <div class="profile-stat">
+                                <div class="profile-stat-value" id="stat-following">0</div>
+                                <div class="profile-stat-label" data-i18n="following">Following</div>
+                            </div>
+                            <div class="profile-stat">
+                                <div class="profile-stat-value" id="stat-posts">0</div>
+                                <div class="profile-stat-label" data-i18n="posts">Posts</div>
+                            </div>
+                        </div>
+                        
+                        <div style="display: flex; gap: 12px; margin-top: 20px;">
+                            <button class="btn btn-primary" style="flex: 1;" onclick="openEditProfileModal()">
+                                <i class="fas fa-edit"></i> <span data-i18n="editProfile">Edit Profile</span>
+                            </button>
+                            <button class="btn btn-secondary" style="flex: 1;" onclick="openSettings()">
+                                <i class="fas fa-cog"></i> <span data-i18n="settings">Settings</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bottom Navigation (Mobile) -->
+            <div class="bottom-nav">
+                <button class="nav-tab active" onclick="switchPage('home')">
+                    <i class="fas fa-home"></i>
+                    <span data-i18n="home">Home</span>
+                </button>
+                <button class="nav-tab" onclick="switchPage('network')">
+                    <i class="fas fa-users"></i>
+                    <span data-i18n="network">Network</span>
+                </button>
+                <button class="nav-tab" onclick="openMessenger()">
+                    <i class="fas fa-comments"></i>
+                    <span data-i18n="messages">Messages</span>
+                </button>
+                <button class="nav-tab" onclick="switchPage('notifications')">
+                    <i class="fas fa-bell"></i>
+                    <span data-i18n="alerts">Alerts</span>
+                </button>
+                <button class="nav-tab" onclick="switchPage('profile')">
+                    <i class="fas fa-user"></i>
+                    <span data-i18n="profile">Profile</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Messenger Window -->
+        <div id="messenger-window" class="messenger-window">
+            <div class="messenger-header">
+                <div style="display: flex; align-items: center; gap: 12px;">
+                    <div class="user-avatar" style="background-image: url('');">TH</div>
+                    <div>
+                        <h4 style="font-weight: 600;">TechHub Electronics</h4>
+                        <div style="font-size: 12px; opacity: 0.8;" data-i18n="onlineWholesale">Online • Wholesale Supplier</div>
+                    </div>
+                </div>
+                <div style="display: flex; gap: 15px;">
+                    <i class="fas fa-phone" style="cursor: pointer;" onclick="callBusiness()" aria-label="Call business"></i>
+                    <i class="fas fa-times" onclick="closeMessenger()" style="cursor: pointer;" aria-label="Close messenger"></i>
+                </div>
+            </div>
+            
+            <div class="messenger-body">
+                <div class="messages-container" id="messages-container">
+                    <!-- Messages will be loaded here -->
+                </div>
+                
+                <div class="typing-indicator" id="typing-indicator" style="display: none;">
+                    <div>TechHub Electronics is typing</div>
+                    <div class="typing-dots">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </div>
+                </div>
+                
+                <div class="message-input-container">
+                    <input type="text" class="message-input" id="message-input" placeholder="Type a message..." data-i18n="messagePlaceholder" onkeydown="handleMessageKeydown(event)">
+                    <button class="btn btn-primary" style="padding: 10px 20px;" onclick="sendMessage()">
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modals -->
+    <!-- Register Modal -->
+    <div id="register-modal" class="modal-overlay">
+        <div class="modal">
+            <div class="modal-header">
+                <button class="modal-back-btn" onclick="closeModal('register-modal')" aria-label="Go back">
+                    <i class="fas fa-arrow-left"></i>
+                </button>
+                <h2 class="modal-title" data-i18n="registerBusiness">Register Business Account</h2>
+            </div>
+            
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="form-label" data-i18n="businessName">Business Name</label>
+                    <input type="text" id="reg-business-name" class="form-input" placeholder="Enter your business name" data-i18n="enterBusinessName">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" data-i18n="businessEmail">Business Email</label>
+                    <input type="email" id="reg-email" class="form-input" placeholder="email@yourbusiness.com">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" data-i18n="phoneNumber">Phone Number</label>
+                    <input type="tel" id="reg-phone" class="form-input" placeholder="+94 XX XXX XXXX">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" data-i18n="businessCategory">Business Category</label>
+                    <select id="reg-category" class="form-select">
+                        <option value="" data-i18n="selectCategory">Select Category</option>
+                        <option value="electronics" data-i18n="electronics">PC & Electronics</option>
+                        <option value="fruits" data-i18n="fruits">Fruits & Vegetables</option>
+                        <option value="clothing" data-i18n="clothing">Clothing & Textiles</option>
+                        <option value="construction" data-i18n="construction">Construction Materials</option>
+                        <option value="food" data-i18n="food">Food Items</option>
+                        <option value="other" data-i18n="otherBusiness">Other Business</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" data-i18n="businessDescription">Business Description</label>
+                    <textarea id="reg-description" class="form-textarea" placeholder="Describe your business..." data-i18n="describeBusiness"></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" data-i18n="password">Password</label>
+                    <input type="password" id="reg-password" class="form-input" placeholder="Create a password" data-i18n="createPassword">
+                </div>
+                
+                <div class="form-group">
+                    <div id="register-error" style="color: var(--danger); font-size: 14px; display: none;"></div>
+                </div>
+            </div>
+            
+            <div class="modal-footer">
+                <button class="btn btn-primary" style="flex: 1;" onclick="handleRegister()">
+                    <i class="fas fa-check"></i> <span data-i18n="register">Register</span>
+                </button>
+                <button class="btn btn-secondary" style="flex: 1;" onclick="closeModal('register-modal')">
+                    <span data-i18n="cancel">Cancel</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Profile Modal -->
+    <div id="edit-profile-modal" class="modal-overlay">
+        <div class="modal">
+            <div class="modal-header">
+                <button class="modal-back-btn" onclick="closeModal('edit-profile-modal')" aria-label="Go back">
+                    <i class="fas fa-arrow-left"></i>
+                </button>
+                <h2 class="modal-title" data-i18n="editBusinessProfile">Edit Business Profile</h2>
+            </div>
+            
+            <div class="modal-body">
+                <div class="profile-picture-upload">
+                    <div class="profile-picture-preview" id="edit-profile-picture" style="background-image: url('');">
+                        <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: var(--text-secondary); font-size: 14px; text-align: center;">
+                            Preview
+                        </div>
+                    </div>
+                    
+                    <div style="margin-bottom: 20px;">
+                        <label for="edit-profile-picture-input" class="upload-btn">
+                            <i class="fas fa-upload"></i>
+                            <span data-i18n="uploadPhoto">Upload Photo</span>
+                        </label>
+                        <input type="file" id="edit-profile-picture-input" accept="image/*" style="display: none;">
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" data-i18n="businessName">Business Name</label>
+                    <input type="text" id="edit-name" class="form-input" value="My Business">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" data-i18n="logoInitials">Logo Initials (2 Letters)</label>
+                    <input type="text" id="edit-logo" class="form-input" maxlength="2" value="MB">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" data-i18n="businessCategory">Business Category</label>
+                    <select id="edit-category" class="form-select">
+                        <option value="electronics" data-i18n="electronics">PC & Electronics</option>
+                        <option value="fruits" data-i18n="fruits">Fruits & Vegetables</option>
+                        <option value="clothing" data-i18n="clothing">Clothing & Textiles</option>
+                        <option value="construction" data-i18n="construction">Construction Materials</option>
+                        <option value="food" data-i18n="food">Food Items</option>
+                        <option value="other" data-i18n="otherBusiness">Other Business</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" data-i18n="businessDescription">Business Description</label>
+                    <textarea id="edit-description" class="form-textarea" rows="3" placeholder="Describe your business..." data-i18n="describeBusiness"></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" data-i18n="contactPhone">Contact Phone</label>
+                    <input type="tel" id="edit-phone" class="form-input" placeholder="+94 77 123 4567">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" data-i18n="businessAddress">Business Address</label>
+                    <input type="text" id="edit-address" class="form-input" placeholder="Enter business address" data-i18n="enterBusinessAddress">
+                </div>
+            </div>
+            
+            <div class="modal-footer">
+                <button class="btn btn-primary" style="flex: 1;" onclick="saveProfile()">
+                    <i class="fas fa-save"></i> <span data-i18n="saveChanges">Save Changes</span>
+                </button>
+                <button class="btn btn-secondary" style="flex: 1;" onclick="closeModal('edit-profile-modal')">
+                    <span data-i18n="cancel">Cancel</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Profile Picture Modal -->
+    <div id="profile-picture-modal" class="modal-overlay">
+        <div class="modal">
+            <div class="modal-header">
+                <button class="modal-back-btn" onclick="closeModal('profile-picture-modal')" aria-label="Go back">
+                    <i class="fas fa-arrow-left"></i>
+                </button>
+                <h2 class="modal-title" data-i18n="changeProfilePicture">Change Profile Picture</h2>
+            </div>
+            
+            <div class="modal-body">
+                <div class="profile-picture-upload">
+                    <div class="profile-picture-preview" id="profile-picture-preview" style="background-image: url('');">
+                        <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: var(--text-secondary); font-size: 14px; text-align: center;" id="profile-picture-text">
+                            Preview
+                        </div>
+                    </div>
+                    
+                    <div style="margin-bottom: 20px;">
+                        <label for="profile-picture-input" class="upload-btn">
+                            <i class="fas fa-upload"></i>
+                            <span data-i18n="uploadPhoto">Upload Photo</span>
+                        </label>
+                        <input type="file" id="profile-picture-input" accept="image/*" style="display: none;">
+                    </div>
+                    
+                    <div style="font-size: 12px; color: var(--text-secondary);">
+                        <span data-i18n="photoHint">Upload a clear photo of your business logo or store</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="modal-footer">
+                <button class="btn btn-primary" style="flex: 1;" onclick="saveProfilePicture()">
+                    <i class="fas fa-save"></i> <span data-i18n="saveChanges">Save Changes</span>
+                </button>
+                <button class="btn btn-secondary" style="flex: 1;" onclick="closeModal('profile-picture-modal')">
+                    <span data-i18n="cancel">Cancel</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Post Modal -->
+    <div id="post-modal" class="modal-overlay">
+        <div class="modal">
+            <div class="modal-header">
+                <button class="modal-back-btn" onclick="closeModal('post-modal')" aria-label="Go back">
+                    <i class="fas fa-arrow-left"></i>
+                </button>
+                <h2 class="modal-title" id="post-modal-title" data-i18n="createPost">Create Post</h2>
+            </div>
+            
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="form-label" data-i18n="postContent">Post Content</label>
+                    <textarea id="modal-post-content" class="form-textarea" rows="4" placeholder="What would you like to share?" data-i18n="sharePlaceholder"></textarea>
+                </div>
+                
+                <div id="post-extra-fields">
+                    <!-- Extra fields for product/offer posts -->
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" data-i18n="addImage">Add Image (Optional)</label>
+                    <div style="border: 2px dashed var(--border-color); border-radius: 12px; padding: 30px; text-align: center; cursor: pointer;" onclick="document.getElementById('post-image').click()">
+                        <i class="fas fa-cloud-upload-alt" style="font-size: 40px; color: var(--text-secondary); margin-bottom: 10px;"></i>
+                        <div style="color: var(--text-secondary);" data-i18n="clickToUpload">Click to upload image</div>
+                        <input type="file" id="post-image" accept="image/*" style="display: none;">
+                    </div>
+                </div>
+            </div>
+            
+            <div class="modal-footer">
+                <button class="btn btn-primary" style="flex: 1;" onclick="publishPost()">
+                    <i class="fas fa-paper-plane"></i> <span data-i18n="publish">Publish</span>
+                </button>
+                <button class="btn btn-secondary" style="flex: 1;" onclick="closeModal('post-modal')">
+                    <span data-i18n="cancel">Cancel</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Settings Modal -->
+    <div id="settings-modal" class="modal-overlay">
+        <div class="modal">
+            <div class="modal-header">
+                <button class="modal-back-btn" onclick="closeModal('settings-modal')" aria-label="Go back">
+                    <i class="fas fa-arrow-left"></i>
+                </button>
+                <h2 class="modal-title" data-i18n="settings">Settings</h2>
+            </div>
+            
+            <div class="modal-body">
+                <div class="profile-picture-upload">
+                    <div class="profile-picture-preview" id="settings-profile-picture" style="background-image: url(''); width: 100px; height: 100px;">
+                        <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: var(--text-secondary); font-size: 14px; text-align: center;">
+                            MB
+                        </div>
+                    </div>
+                    
+                    <div style="margin-bottom: 20px; text-align: center;">
+                        <h3 id="settings-profile-name" style="margin-bottom: 5px;">My Business</h3>
+                        <div class="profile-category" id="settings-profile-category">Electronics</div>
+                    </div>
+                </div>
+                
+                <!-- Language Settings -->
+                <div class="form-group">
+                    <label class="form-label" data-i18n="language">Language</label>
+                    <div style="display: flex; gap: 15px; margin-top: 10px;">
+                        <div style="flex: 1; cursor: pointer;" onclick="changeLanguage('en')">
+                            <div style="padding: 20px; border: 2px solid var(--border-color); border-radius: 12px; text-align: center; background: var(--hover-bg); color: var(--text-primary);">
+                                <i class="fas fa-language" style="font-size: 24px; margin-bottom: 10px;"></i>
+                                <div style="font-weight: 500;">English</div>
+                            </div>
+                        </div>
+                        <div style="flex: 1; cursor: pointer;" onclick="changeLanguage('si')">
+                            <div style="padding: 20px; border: 2px solid var(--border-color); border-radius: 12px; text-align: center; background: var(--hover-bg); color: var(--text-primary);">
+                                <i class="fas fa-language" style="font-size: 24px; margin-bottom: 10px;"></i>
+                                <div style="font-weight: 500;">සිංහල</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Theme Settings -->
+                <div class="form-group">
+                    <label class="form-label" data-i18n="theme">Theme</label>
+                    <div style="display: flex; gap: 15px; margin-top: 10px;">
+                        <div style="flex: 1; cursor: pointer;" onclick="setTheme('light')">
+                            <div style="padding: 20px; border: 2px solid var(--border-color); border-radius: 12px; text-align: center; background: white; color: black;">
+                                <i class="fas fa-sun" style="font-size: 24px;"></i>
+                                <div style="margin-top: 10px; font-weight: 500;" data-i18n="lightMode">Light Mode</div>
+                            </div>
+                        </div>
+                        <div style="flex: 1; cursor: pointer;" onclick="setTheme('dark')">
+                            <div style="padding: 20px; border: 2px solid var(--border-color); border-radius: 12px; text-align: center; background: #242526; color: white;">
+                                <i class="fas fa-moon" style="font-size: 24px;"></i>
+                                <div style="margin-top: 10px; font-weight: 500;" data-i18n="darkMode">Dark Mode</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Quick Tips -->
+                <div class="form-group">
+                    <label class="form-label" data-i18n="quickTips">Quick Tips</label>
+                    <div style="background: var(--hover-bg); border-radius: 12px; padding: 20px; margin-top: 10px;">
+                        <div style="margin-bottom: 10px;">
+                            <div style="font-weight: 500; margin-bottom: 5px;">Messaging:</div>
+                            <div style="font-size: 13px; color: var(--text-secondary);">Press Enter to send messages</div>
+                        </div>
+                        <div style="margin-bottom: 10px;">
+                            <div style="font-weight: 500; margin-bottom: 5px;">Posts:</div>
+                            <div style="font-size: 13px; color: var(--text-secondary);">Hover over Like button for reactions</div>
+                        </div>
+                        <div>
+                            <div style="font-weight: 500; margin-bottom: 5px;">Profile:</div>
+                            <div style="font-size: 13px; color: var(--text-secondary);">Click profile picture to upload DP</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-group" style="margin-top: 30px;">
+                    <button class="btn" style="width: 100%; background: var(--danger); color: white;" onclick="handleLogout()">
+                        <i class="fas fa-sign-out-alt"></i> <span data-i18n="logout">Logout</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile Menu Drawer -->
+    <div class="mobile-menu-overlay" onclick="closeMobileMenu()"></div>
+    <div class="mobile-menu-drawer">
+        <div style="padding: 20px; border-bottom: 1px solid var(--border-color); margin-bottom: 20px; display: flex; align-items: center; justify-content: space-between;">
+            <div class="logo">
+                <div class="logo-icon">
+                    <i class="fas fa-handshake"></i>
+                </div>
+                <span>TradeConnect</span>
+            </div>
+            <button class="nav-btn" onclick="closeMobileMenu()">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        
+        <div class="nav-item active" onclick="switchPage('home'); closeMobileMenu();">
+            <div class="nav-icon">
+                <i class="fas fa-home"></i>
+            </div>
+            <div class="nav-text" data-i18n="home">Home</div>
+        </div>
+        
+        <div class="nav-item" onclick="switchPage('network'); closeMobileMenu();">
+            <div class="nav-icon">
+                <i class="fas fa-users"></i>
+            </div>
+            <div class="nav-text" data-i18n="network">Network</div>
+        </div>
+        
+        <div class="nav-item" onclick="openMessenger(); closeMobileMenu();">
+            <div class="nav-icon">
+                <i class="fas fa-comments"></i>
+            </div>
+            <div class="nav-text" data-i18n="messages">Messages</div>
+        </div>
+        
+        <div class="nav-item" onclick="switchPage('notifications'); closeMobileMenu();">
+            <div class="nav-icon">
+                <i class="fas fa-bell"></i>
+            </div>
+            <div class="nav-text" data-i18n="notifications">Notifications</div>
+        </div>
+        
+        <div class="nav-item" onclick="switchPage('profile'); closeMobileMenu();">
+            <div class="nav-icon">
+                <i class="fas fa-user"></i>
+            </div>
+            <div class="nav-text" data-i18n="profile">Profile</div>
+        </div>
+        
+        <div class="nav-item" onclick="openSettings(); closeMobileMenu();">
+            <div class="nav-icon">
+                <i class="fas fa-cog"></i>
+            </div>
+            <div class="nav-text" data-i18n="settings">Settings</div>
+        </div>
+        
+        <!-- Language Selector in Mobile Menu -->
+        <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid var(--border-color);">
+            <div style="font-size: 12px; color: var(--text-secondary); margin-bottom: 10px;" data-i18n="language">Language</div>
+            <div style="display: flex; gap: 10px;">
+                <button onclick="changeLanguage('en'); closeMobileMenu();" style="flex: 1; background: var(--hover-bg); border: none; padding: 12px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px;">
+                    <i class="fas fa-language"></i>
+                    <span>English</span>
+                </button>
+                <button onclick="changeLanguage('si'); closeMobileMenu();" style="flex: 1; background: var(--hover-bg); border: none; padding: 12px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px;">
+                    <i class="fas fa-language"></i>
+                    <span>සිංහල</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ===== FIREBASE CONFIGURATION =====
+        // Replace with your Firebase config from console
+        const firebaseConfig = {
+            apiKey: "AIzaSyC2PjPw1Hs2k_b6L0LXWgLf4qPzFkD5M8Y",
+            authDomain: "tradeconnect-demo.firebaseapp.com",
+            projectId: "tradeconnect-demo",
+            storageBucket: "tradeconnect-demo.appspot.com",
+            messagingSenderId: "123456789012",
+            appId: "1:123456789012:web:abcdef1234567890"
+        };
+
+        // Initialize Firebase
+        let firebaseInitialized = false;
+        try {
+            firebase.initializeApp(firebaseConfig);
+            firebaseInitialized = true;
+            console.log("Firebase initialized successfully");
+        } catch (e) {
+            console.log("Firebase initialization failed, running in demo mode");
+        }
+        
+        const auth = firebaseInitialized ? firebase.auth() : null;
+        const db = firebaseInitialized ? firebase.firestore() : null;
+        const storage = firebaseInitialized ? firebase.storage() : null;
+
+        // ===== APPLICATION STATE =====
+        let currentUser = null;
+        let currentTheme = 'light';
+        let currentLanguage = 'en'; // 'en' or 'si'
+        let posts = [];
+        let activePage = 'home';
+        let notifications = [];
+        let messages = [];
+        let activeReactions = {};
+        let currentProfilePicture = '';
+        let currentProfilePictureFile = null;
+        let pageHistory = ['home'];
+        let businesses = [];
+        let isTyping = false;
+
+        // ===== LANGUAGE TRANSLATIONS =====
+        const translations = {
+            en: {
+                // Login Screen
+                "login": "Login",
+                "createAccount": "Create Business Account",
+                "quickDemo": "Quick Demo Access",
+                "or": "OR",
+                "language": "Language",
+                "emailPlaceholder": "Business Email",
+                "passwordPlaceholder": "Password",
+                "skipToContent": "Skip to main content",
+                "enterHint": "Press Enter to post messages",
+                
+                // Navigation
+                "home": "Home",
+                "network": "Network",
+                "messages": "Messages",
+                "notifications": "Notifications",
+                "profile": "Profile",
+                "settings": "Settings",
+                "alerts": "Alerts",
+                
+                // Search
+                "searchPlaceholder": "Search businesses, products, or categories...",
+                
+                // Posts
+                "postPlaceholder": "What's new in your wholesale business?",
+                "photoVideo": "Photo/Video",
+                "product": "Product",
+                "offer": "Offer",
+                "public": "🌍 Public",
+                "followers": "👥 Followers",
+                "private": "🔒 Private",
+                "post": "Post",
+                "postHint": "Press Enter to post",
+                "createPost": "Create Post",
+                "postContent": "Post Content",
+                "sharePlaceholder": "What would you like to share?",
+                "addImage": "Add Image (Optional)",
+                "clickToUpload": "Click to upload image",
+                "publish": "Publish",
+                
+                // Profile
+                "editProfile": "Edit Profile",
+                "followers": "Followers",
+                "following": "Following",
+                "posts": "Posts",
+                "changeProfilePicture": "Change Profile Picture",
+                "uploadPhoto": "Upload Photo",
+                "photoHint": "Upload a clear photo of your business logo or store",
+                
+                // Network
+                "businessNetwork": "Business Network",
+                "connectBusinesses": "Connect with other wholesale businesses",
+                
+                // Messenger
+                "onlineWholesale": "Online • Wholesale Supplier",
+                "messagePlaceholder": "Type a message...",
+                
+                // Register Modal
+                "registerBusiness": "Register Business Account",
+                "businessName": "Business Name",
+                "enterBusinessName": "Enter your business name",
+                "businessEmail": "Business Email",
+                "phoneNumber": "Phone Number",
+                "businessCategory": "Business Category",
+                "selectCategory": "Select Category",
+                "electronics": "PC & Electronics",
+                "fruits": "Fruits & Vegetables",
+                "clothing": "Clothing & Textiles",
+                "construction": "Construction Materials",
+                "food": "Food Items",
+                "otherBusiness": "Other Business",
+                "businessDescription": "Business Description",
+                "describeBusiness": "Describe your business...",
+                "password": "Password",
+                "createPassword": "Create a password",
+                "register": "Register",
+                "cancel": "Cancel",
+                
+                // Edit Profile Modal
+                "editBusinessProfile": "Edit Business Profile",
+                "logoInitials": "Logo Initials (2 Letters)",
+                "contactPhone": "Contact Phone",
+                "businessAddress": "Business Address",
+                "enterBusinessAddress": "Enter business address",
+                "saveChanges": "Save Changes",
+                
+                // Settings
+                "theme": "Theme",
+                "lightMode": "Light Mode",
+                "darkMode": "Dark Mode",
+                "logout": "Logout",
+                "quickTips": "Quick Tips"
+            },
+            si: {
+                // Login Screen
+                "login": "පිවිසෙන්න",
+                "createAccount": "ව්‍යාපාරික ගිණුමක් සාදන්න",
+                "quickDemo": "ක්ෂණික පෙන්වුම් ප්‍රවේශය",
+                "or": "හෝ",
+                "language": "භාෂාව",
+                "emailPlaceholder": "ව්‍යාපාරික ඊමේල්",
+                "passwordPlaceholder": "මුරපදය",
+                "skipToContent": "ප්‍රධාන අන්තර්ගතයට පනින්න",
+                "enterHint": "පණිවිඩ යැවීමට Enter ඔබන්න",
+                
+                // Navigation
+                "home": "මුල් පිටුව",
+                "network": "ජාලය",
+                "messages": "පණිවිඩ",
+                "notifications": "දැනුම්දීම්",
+                "profile": "පැතිකඩ",
+                "settings": "සැකසුම්",
+                "alerts": "ඇඟවීම්",
+                
+                // Search
+                "searchPlaceholder": "ව්‍යාපාර, භාණ්ඩ හෝ වර්ග සොයන්න...",
+                
+                // Posts
+                "postPlaceholder": "ඔබේ තොග වෙළඳාමේ නවතම දේවල් මොනවාද?",
+                "photoVideo": "ඡායාරූප/වීඩියෝ",
+                "product": "භාණ්ඩය",
+                "offer": "පිරිනැමීම",
+                "public": "🌍 පොදු",
+                "followers": "👥 අනුගාමීන්",
+                "private": "🔒 පුද්ගලික",
+                "post": "පළ කරන්න",
+                "postHint": "පළ කිරීමට Enter ඔබන්න",
+                "createPost": "පළ කිරීමක් සාදන්න",
+                "postContent": "පළ කිරීමේ අන්තර්ගතය",
+                "sharePlaceholder": "ඔබට බෙදා ගැනීමට අවශ්‍ය දේ කුමක්ද?",
+                "addImage": "පින්තූරයක් එකතු කරන්න (විකල්ප)",
+                "clickToUpload": "උඩුගත කිරීමට ක්ලික් කරන්න",
+                "publish": "ප්‍රකාශයට පත් කරන්න",
+                
+                // Profile
+                "editProfile": "පැතිකඩ සංස්කරණය",
+                "followers": "අනුගාමීන්",
+                "following": "අනුගමනය කරයි",
+                "posts": "පළ කිරීම්",
+                "changeProfilePicture": "පැතිකඩ පින්තූරය වෙනස් කරන්න",
+                "uploadPhoto": "පින්තූරය උඩුගත කරන්න",
+                "photoHint": "ඔබේ ව්‍යාපාර ලාංඡනය හෝ වෙළඳසැලේ පැහැදිලි පින්තූරයක් උඩුගත කරන්න",
+                
+                // Network
+                "businessNetwork": "ව්‍යාපාරික ජාලය",
+                "connectBusinesses": "වෙනත් තොග වෙළඳාම් සමඟ සම්බන්ධ වන්න",
+                
+                // Messenger
+                "onlineWholesale": "අන්තර්ජාලය • තොග සැපයුම්කරු",
+                "messagePlaceholder": "පණිවිඩයක් ටයිප් කරන්න...",
+                
+                // Register Modal
+                "registerBusiness": "ව්‍යාපාරික ගිණුම ලියාපදිංචි කරන්න",
+                "businessName": "ව්‍යාපාර නාමය",
+                "enterBusinessName": "ඔබේ ව්‍යාපාර නාමය ඇතුළත් කරන්න",
+                "businessEmail": "ව්‍යාපාරික ඊමේල්",
+                "phoneNumber": "දුරකථන අංකය",
+                "businessCategory": "ව්‍යාපාර කාණ්ඩය",
+                "selectCategory": "කාණ්ඩය තෝරන්න",
+                "electronics": "පරිගණක හා ඉලෙක්ට්‍රොනික",
+                "fruits": "පලතුරු හා එළවළු",
+                "clothing": "ඇඳුම් හා වස්ත්‍ර",
+                "construction": "ගොඩනැගිලි ද්‍රව්‍ය",
+                "food": "ආහාර අයිතම",
+                "otherBusiness": "වෙනත් ව්‍යාපාර",
+                "businessDescription": "ව්‍යාපාර විස්තරය",
+                "describeBusiness": "ඔබේ ව්‍යාපාරය විස්තර කරන්න...",
+                "password": "මුරපදය",
+                "createPassword": "මුරපදයක් සාදන්න",
+                "register": "ලියාපදිංචි වන්න",
+                "cancel": "අවලංගු කරන්න",
+                
+                // Edit Profile Modal
+                "editBusinessProfile": "ව්‍යාපාරික පැතිකඩ සංස්කරණය",
+                "logoInitials": "ලෝගෝ අකුරු (අකුරු 2)",
+                "contactPhone": "සම්බන්ධතා දුරකථනය",
+                "businessAddress": "ව්‍යාපාරික ලිපිනය",
+                "enterBusinessAddress": "ව්‍යාපාරික ලිපිනය ඇතුළත් කරන්න",
+                "saveChanges": "වෙනස්කම් සුරකින්න",
+                
+                // Settings
+                "theme": "තේමාව",
+                "lightMode": "ආලෝක ප්‍රකාරය",
+                "darkMode": "අඳුරු ප්‍රකාරය",
+                "logout": "නික්මෙන්න",
+                "quickTips": "ක්ෂණික ඉඟි"
+            }
+        };
+
+        // ===== INITIALIZATION =====
+        document.addEventListener('DOMContentLoaded', function() {
+            // Load saved settings
+            const savedLanguage = localStorage.getItem('tradeConnectLanguage');
+            if (savedLanguage) {
+                currentLanguage = savedLanguage;
+            }
+            
+            const savedTheme = localStorage.getItem('tradeConnectTheme');
+            if (savedTheme) {
+                currentTheme = savedTheme;
+            }
+            
+            // Load saved profile picture
+            const savedProfilePicture = localStorage.getItem('tradeConnectProfilePicture');
+            if (savedProfilePicture) {
+                currentProfilePicture = savedProfilePicture;
+            }
+            
+            // Handle splash screen
+            setTimeout(() => {
+                document.getElementById('splash-screen').style.opacity = '0';
+                setTimeout(() => {
+                    document.getElementById('splash-screen').style.display = 'none';
+                    
+                    // Apply theme
+                    document.body.setAttribute('data-theme', currentTheme);
+                    
+                    // Apply language
+                    updateLanguageUI();
+                    
+                    // Apply profile picture
+                    updateProfilePicture();
+                    
+                    // Check authentication
+                    if (firebaseInitialized && auth) {
+                        auth.onAuthStateChanged((user) => {
+                            if (user) {
+                                loadUserData(user.uid);
+                            } else {
+                                showLoginScreen();
+                            }
+                        });
+                    } else {
+                        // Demo mode
+                        quickLogin();
+                    }
+                    
+                    // Load demo data
+                    loadDemoData();
+                    
+                }, 500);
+            }, 2000);
+
+            // Set up event listeners
+            setupEventListeners();
+            
+            // Set up profile picture upload
+            setupProfilePictureUpload();
+        });
+
+        function setupEventListeners() {
+            // Post input enter key (FB style - Enter to post)
+            document.getElementById('post-content').addEventListener('keydown', function(e) {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    createPost();
+                }
+            });
+
+            // Search input
+            document.getElementById('global-search').addEventListener('input', searchContent);
+
+            // Message input enter key
+            document.getElementById('message-input').addEventListener('keydown', function(e) {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    sendMessage();
+                }
+            });
+            
+            // Close modals with Escape key
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape') {
+                    closeAllModals();
+                    closeLanguageMenu();
+                    closeReactions();
+                    closeMessenger();
+                }
+            });
+            
+            // Handle focus for accessibility
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Tab') {
+                    document.body.classList.add('keyboard-mode');
+                }
+            });
+            
+            document.addEventListener('click', function() {
+                document.body.classList.remove('keyboard-mode');
+            });
+            
+            // Handle back button
+            window.addEventListener('popstate', function() {
+                if (pageHistory.length > 1) {
+                    pageHistory.pop();
+                    const previousPage = pageHistory[pageHistory.length - 1];
+                    switchPage(previousPage, true);
+                }
+            });
+            
+            // Setup edit profile picture
+            const editProfilePictureInput = document.getElementById('edit-profile-picture-input');
+            if (editProfilePictureInput) {
+                editProfilePictureInput.addEventListener('change', function(e) {
+                    const file = e.target.files[0];
+                    if (file) {
+                        const reader = new FileReader();
+                        reader.onload = function(e) {
+                            document.getElementById('edit-profile-picture').style.backgroundImage = `url(${e.target.result})`;
+                        };
+                        reader.readAsDataURL(file);
+                    }
+                });
+            }
+        }
+
+        function setupProfilePictureUpload() {
+            const profilePictureInput = document.getElementById('profile-picture-input');
+            const profilePicturePreview = document.getElementById('profile-picture-preview');
+            const profilePictureText = document.getElementById('profile-picture-text');
+            
+            profilePictureInput.addEventListener('change', function(e) {
+                const file = e.target.files[0];
+                if (file) {
+                    currentProfilePictureFile = file;
+                    
+                    // Preview the image
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        profilePicturePreview.style.backgroundImage = `url(${e.target.result})`;
+                        profilePictureText.style.display = 'none';
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+        }
+
+        // ===== BACK BUTTON FUNCTIONS =====
+        function goBack() {
+            if (pageHistory.length > 1) {
+                pageHistory.pop();
+                const previousPage = pageHistory[pageHistory.length - 1];
+                switchPage(previousPage, true);
+            } else {
+                switchPage('home', true);
+            }
+        }
+
+        // ===== LANGUAGE FUNCTIONS =====
+        function updateLanguageUI() {
+            // Update all elements with data-i18n attribute
+            document.querySelectorAll('[data-i18n]').forEach(element => {
+                const key = element.getAttribute('data-i18n');
+                if (translations[currentLanguage][key]) {
+                    if (element.tagName === 'INPUT' || element.tagName === 'TEXTAREA') {
+                        element.placeholder = translations[currentLanguage][key];
+                    } else {
+                        element.textContent = translations[currentLanguage][key];
+                    }
+                }
+            });
+            
+            // Update current language display
+            document.getElementById('current-language').textContent = currentLanguage === 'en' ? 'EN' : 'සිං';
+            
+            // Update theme icon text
+            const themeIcon = document.querySelector('#theme-toggle-btn i');
+            if (themeIcon) {
+                themeIcon.className = currentTheme === 'light' ? 'fas fa-moon' : 'fas fa-sun';
+            }
+            
+            // Update post visibility options
+            const visibilitySelect = document.getElementById('post-visibility');
+            if (visibilitySelect) {
+                const options = visibilitySelect.options;
+                if (options.length >= 3) {
+                    options[0].text = translations[currentLanguage]['public'] || '🌍 Public';
+                    options[1].text = translations[currentLanguage]['followers'] || '👥 Followers';
+                    options[2].text = translations[currentLanguage]['private'] || '🔒 Private';
+                }
+            }
+            
+            // Update demo data with current language
+            updateDemoDataLanguage();
+        }
+
+        function changeLanguage(lang) {
+            currentLanguage = lang;
+            localStorage.setItem('tradeConnectLanguage', lang);
+            updateLanguageUI();
+            closeLanguageMenu();
+            
+            // Show toast notification
+            const langName = lang === 'en' ? 'English' : 'සිංහල';
+            showToast(`${langName} activated`, 'success');
+        }
+
+        function toggleLanguageMenu() {
+            const menu = document.getElementById('language-menu');
+            if (menu.style.display === 'block') {
+                closeLanguageMenu();
+            } else {
+                menu.style.display = 'block';
+                
+                // Close menu when clicking outside
+                setTimeout(() => {
+                    document.addEventListener('click', closeLanguageMenuOnClickOutside);
+                }, 10);
+            }
+        }
+
+        function closeLanguageMenu() {
+            const menu = document.getElementById('language-menu');
+            if (menu) {
+                menu.style.display = 'none';
+                document.removeEventListener('click', closeLanguageMenuOnClickOutside);
+            }
+        }
+
+        function closeLanguageMenuOnClickOutside(event) {
+            const menu = document.getElementById('language-menu');
+            const switcher = document.querySelector('.language-switcher');
+            
+            if (menu && switcher && !menu.contains(event.target) && !switcher.contains(event.target)) {
+                closeLanguageMenu();
+            }
+        }
+
+        // ===== PROFILE PICTURE FUNCTIONS =====
+        function openProfilePictureModal() {
+            document.getElementById('profile-picture-modal').classList.add('active');
+        }
+
+        function saveProfilePicture() {
+            if (currentProfilePictureFile) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    currentProfilePicture = e.target.result;
+                    localStorage.setItem('tradeConnectProfilePicture', currentProfilePicture);
+                    updateProfilePicture();
+                    closeModal('profile-picture-modal');
+                    showToast(currentLanguage === 'en' ? 'Profile picture updated!' : 'පැතිකඩ පින්තූරය යාවත්කාලීන කරන ලදී!', 'success');
+                };
+                reader.readAsDataURL(currentProfilePictureFile);
+            } else {
+                showToast(currentLanguage === 'en' ? 'Please select a photo first' : 'කරුණාකර පළමුව පින්තූරයක් තෝරන්න', 'warning');
+            }
+        }
+
+        function updateProfilePicture() {
+            // Update all profile pictures
+            const profilePictures = [
+                document.getElementById('profile-avatar'),
+                document.getElementById('user-avatar'),
+                document.getElementById('current-user-avatar'),
+                document.getElementById('edit-profile-picture'),
+                document.getElementById('settings-profile-picture')
+            ];
+            
+            profilePictures.forEach(pic => {
+                if (pic && currentProfilePicture) {
+                    pic.style.backgroundImage = `url(${currentProfilePicture})`;
+                    if (pic.id !== 'edit-profile-picture' && pic.id !== 'settings-profile-picture') {
+                        pic.textContent = '';
+                    }
+                }
+            });
+        }
+
+        // ===== DEMO DATA =====
+        function loadDemoData() {
+            // Initialize reactions object
+            activeReactions = {};
+            
+            // Demo businesses
+            businesses = [
+                {
+                    id: "techhub123",
+                    name: "TechHub Electronics",
+                    logo: "TE",
+                    category: "electronics",
+                    description: "Wholesale electronics supplier",
+                    followers: 245,
+                    following: 120,
+                    posts: 45,
+                    online: true
+                },
+                {
+                    id: "freshmart456",
+                    name: "FreshMart Produce",
+                    logo: "FM",
+                    category: "fruits",
+                    description: "Fresh fruits & vegetables",
+                    followers: 189,
+                    following: 95,
+                    posts: 32,
+                    online: false
+                },
+                {
+                    id: "styletext789",
+                    name: "Style Textiles",
+                    logo: "ST",
+                    category: "clothing",
+                    description: "Fabric & clothing materials",
+                    followers: 321,
+                    following: 150,
+                    posts: 67,
+                    online: true
+                }
+            ];
+            
+            // Demo posts with reactions
+            posts = [
+                {
+                    id: 1,
+                    businessId: "techhub123",
+                    businessName: "TechHub Electronics",
+                    businessLogo: "TE",
+                    businessLogoUrl: "",
+                    content: currentLanguage === 'en' 
+                        ? "🚀 New shipment of laptops arrived! Bulk orders available at wholesale prices. Contact for catalog and pricing. Minimum order: 10 units."
+                        : "🚀 නව ලැප්ටොප් ගැල්ලක් ලැබුණි! තොග මිලට තොග ඇණවුම් ලබා ගත හැක. කැටලොග් සහ මිල ගණන් සඳහා සම්බන්ධ වන්න. අවම ඇණවුම: ඒකක 10 ක්.",
+                    type: "product",
+                    likes: 24,
+                    loves: 12,
+                    cares: 3,
+                    wows: 5,
+                    hahas: 2,
+                    sads: 1,
+                    angrys: 0,
+                    comments: 8,
+                    shares: 3,
+                    visibility: "public",
+                    category: "electronics",
+                    timestamp: currentLanguage === 'en' ? "2 hours ago" : "පැය 2 කට පෙර",
+                    createdAt: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(),
+                    price: currentLanguage === 'en' ? "Rs. 85,000" : "රු. 85,000",
+                    minOrder: currentLanguage === 'en' ? "10 units" : "ඒකක 10 ක්",
+                    userReaction: "like"
+                },
+                {
+                    id: 2,
+                    businessId: "freshmart456",
+                    businessName: "FreshMart Produce",
+                    businessLogo: "FM",
+                    businessLogoUrl: "",
+                    content: currentLanguage === 'en'
+                        ? "🍎 Fresh fruits and vegetables available for wholesale. Daily deliveries to Colombo area. Best quality guarantee! Special offer: 10% off for first-time buyers."
+                        : "🍎 නැවුම් පලතුරු සහ එළවළු තොග වෙළඳාම සඳහා තිබේ. කොළඹ ප්‍රදේශයට දෛනික බෙදාහැරීම්. හොඳම ගුණාත්මකභාවයට තහවුරුව! විශේෂ පිරිනැමීම: පළමු වරට මිලදී ගන්නන් සඳහා 10% වට්ටමක්.",
+                    type: "offer",
+                    likes: 18,
+                    loves: 8,
+                    cares: 4,
+                    wows: 3,
+                    hahas: 1,
+                    sads: 0,
+                    angrys: 0,
+                    comments: 5,
+                    shares: 2,
+                    visibility: "public",
+                    category: "fruits",
+                    timestamp: currentLanguage === 'en' ? "5 hours ago" : "පැය 5 කට පෙර",
+                    createdAt: new Date(Date.now() - 5 * 60 * 60 * 1000).toISOString(),
+                    offerTitle: currentLanguage === 'en' ? "First Order Discount" : "පළමු ඇණවුම් වට්ටම",
+                    discount: "10%",
+                    validDate: "2024-12-31",
+                    userReaction: "love"
+                },
+                {
+                    id: 3,
+                    businessId: "styletext789",
+                    businessName: "Style Textiles",
+                    businessLogo: "ST",
+                    businessLogoUrl: "",
+                    content: currentLanguage === 'en'
+                        ? "New collection of wholesale fabrics and clothing materials available. Custom printing available for bulk orders. Contact us for samples."
+                        : "තොග රෙදි සහ ඇඳුම් ද්‍රව්‍ය නව එකතුවක් ලබා ගත හැකිය. තොග ඇණවුම් සඳහා අභිරුචි මුද්‍රණය ලබා ගත හැකිය. නිදර්ශක සඳහා අප අමතන්න.",
+                    type: "normal",
+                    likes: 32,
+                    loves: 15,
+                    cares: 7,
+                    wows: 9,
+                    hahas: 4,
+                    sads: 2,
+                    angrys: 1,
+                    comments: 12,
+                    shares: 6,
+                    visibility: "public",
+                    category: "clothing",
+                    timestamp: currentLanguage === 'en' ? "1 day ago" : "දින 1 කට පෙර",
+                    createdAt: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString(),
+                    userReaction: null
+                }
+            ];
+
+            // Demo notifications
+            notifications = [
+                {
+                    id: 1,
+                    type: 'like',
+                    icon: 'fas fa-thumbs-up',
+                    iconColor: '#1877F2',
+                    text: currentLanguage === 'en' 
+                        ? 'TechHub Electronics liked your post'
+                        : 'TechHub Electronics ඔබේ පළ කිරීමට කැමතියි',
+                    time: currentLanguage === 'en' ? '2 min ago' : 'මිනිත්තු 2 කට පෙර',
+                    unread: true
+                },
+                {
+                    id: 2,
+                    type: 'comment',
+                    icon: 'fas fa-comment',
+                    iconColor: '#42B72A',
+                    text: currentLanguage === 'en'
+                        ? 'FreshMart Produce commented: "Great prices!"'
+                        : 'FreshMart Produce අදහස් දැක්වීය: "හොඳ මිල!"',
+                    time: currentLanguage === 'en' ? '1 hour ago' : 'පැය 1 කට පෙර',
+                    unread: true
+                },
+                {
+                    id: 3,
+                    type: 'follow',
+                    icon: 'fas fa-user-plus',
+                    iconColor: '#8B5CF6',
+                    text: currentLanguage === 'en'
+                        ? 'Style Textiles started following you'
+                        : 'Style Textiles ඔබව අනුගමනය කිරීම ආරම්භ කළේය',
+                    time: currentLanguage === 'en' ? '3 hours ago' : 'පැය 3 කට පෙර',
+                    unread: false
+                }
+            ];
+
+            // Demo messages
+            messages = [
+                {
+                    id: 1,
+                    sender: "TechHub Electronics",
+                    senderLogo: "TH",
+                    senderLogoUrl: "",
+                    text: currentLanguage === 'en'
+                        ? "Hi! Interested in your wholesale offer. Can you share the catalog?"
+                        : "ආයුබෝවන්! ඔබේ තොග පිරිනැමීමට උනන්දු වෙමි. ඔබට කැටලොගය බෙදා ගත හැකිද?",
+                    time: "10:30 AM",
+                    sent: false,
+                    status: "read"
+                },
+                {
+                    id: 2,
+                    sender: "You",
+                    senderLogo: "MB",
+                    senderLogoUrl: currentProfilePicture,
+                    text: currentLanguage === 'en'
+                        ? "Sure! I'll send you the PDF catalog via email."
+                        : "ඇත්තෙන්ම! මම ඔබට PDF කැටලොගය ඊමේල් එකෙන් යවන්නම්.",
+                    time: "10:32 AM",
+                    sent: true,
+                    status: "read"
+                },
+                {
+                    id: 3,
+                    sender: "TechHub Electronics",
+                    senderLogo: "TH",
+                    senderLogoUrl: "",
+                    text: currentLanguage === 'en'
+                        ? "Great! Also, what's the minimum order quantity?"
+                        : "හොඳයි! එසේම, අවම ඇණවුම් ප්‍රමාණය කුමක්ද?",
+                    time: "10:35 AM",
+                    sent: false,
+                    status: "delivered"
+                }
+            ];
+
+            // Load initial data
+            loadPosts();
+            loadNotifications();
+            loadMessages();
+            loadBusinesses();
+        }
+
+        function updateDemoDataLanguage() {
+            // Update posts content based on language
+            posts.forEach(post => {
+                if (post.id === 1) {
+                    post.content = currentLanguage === 'en' 
+                        ? "🚀 New shipment of laptops arrived! Bulk orders available at wholesale prices. Contact for catalog and pricing. Minimum order: 10 units."
+                        : "🚀 නව ලැප්ටොප් ගැල්ලක් ලැබුණි! තොග මිලට තොග ඇණවුම් ලබා ගත හැක. කැටලොග් සහ මිල ගණන් සඳහා සම්බන්ධ වන්න. අවම ඇණවුම: ඒකක 10 ක්.";
+                    post.timestamp = currentLanguage === 'en' ? "2 hours ago" : "පැය 2 කට පෙර";
+                    post.price = currentLanguage === 'en' ? "Rs. 85,000" : "රු. 85,000";
+                    post.minOrder = currentLanguage === 'en' ? "10 units" : "ඒකක 10 ක්";
+                } else if (post.id === 2) {
+                    post.content = currentLanguage === 'en'
+                        ? "🍎 Fresh fruits and vegetables available for wholesale. Daily deliveries to Colombo area. Best quality guarantee! Special offer: 10% off for first-time buyers."
+                        : "🍎 නැවුම් පලතුරු සහ එළවළු තොග වෙළඳාම සඳහා තිබේ. කොළඹ ප්‍රදේශයට දෛනික බෙදාහැරීම්. හොඳම ගුණාත්මකභාවයට තහවුරුව! විශේෂ පිරිනැමීම: පළමු වරට මිලදී ගන්නන් සඳහා 10% වට්ටමක්.";
+                    post.timestamp = currentLanguage === 'en' ? "5 hours ago" : "පැය 5 කට පෙර";
+                    post.offerTitle = currentLanguage === 'en' ? "First Order Discount" : "පළමු ඇණවුම් වට්ටම";
+                } else if (post.id === 3) {
+                    post.content = currentLanguage === 'en'
+                        ? "New collection of wholesale fabrics and clothing materials available. Custom printing available for bulk orders. Contact us for samples."
+                        : "තොග රෙදි සහ ඇඳුම් ද්‍රව්‍ය නව එකතුවක් ලබා ගත හැකිය. තොග ඇණවුම් සඳහා අභිරුචි මුද්‍රණය ලබා ගත හැකිය. නිදර්ශක සඳහා අප අමතන්න.";
+                    post.timestamp = currentLanguage === 'en' ? "1 day ago" : "දින 1 කට පෙර";
+                }
+            });
+            
+            // Update notifications
+            notifications.forEach(notification => {
+                if (notification.id === 1) {
+                    notification.text = currentLanguage === 'en' 
+                        ? 'TechHub Electronics liked your post'
+                        : 'TechHub Electronics ඔබේ පළ කිරීමට කැමතියි';
+                    notification.time = currentLanguage === 'en' ? '2 min ago' : 'මිනිත්තු 2 කට පෙර';
+                } else if (notification.id === 2) {
+                    notification.text = currentLanguage === 'en'
+                        ? 'FreshMart Produce commented: "Great prices!"'
+                        : 'FreshMart Produce අදහස් දැක්වීය: "හොඳ මිල!"';
+                    notification.time = currentLanguage === 'en' ? '1 hour ago' : 'පැය 1 කට පෙර';
+                } else if (notification.id === 3) {
+                    notification.text = currentLanguage === 'en'
+                        ? 'Style Textiles started following you'
+                        : 'Style Textiles ඔබව අනුගමනය කිරීම ආරම්භ කළේය';
+                    notification.time = currentLanguage === 'en' ? '3 hours ago' : 'පැය 3 කට පෙර';
+                }
+            });
+            
+            // Update messages
+            messages.forEach(message => {
+                if (message.id === 1) {
+                    message.text = currentLanguage === 'en'
+                        ? "Hi! Interested in your wholesale offer. Can you share the catalog?"
+                        : "ආයුබෝවන්! ඔබේ තොග පිරිනැමීමට උනන්දු වෙමි. ඔබට කැටලොගය බෙදා ගත හැකිද?";
+                } else if (message.id === 2) {
+                    message.text = currentLanguage === 'en'
+                        ? "Sure! I'll send you the PDF catalog via email."
+                        : "ඇත්තෙන්ම! මම ඔබට PDF කැටලොගය ඊමේල් එකෙන් යවන්නම්.";
+                } else if (message.id === 3) {
+                    message.text = currentLanguage === 'en'
+                        ? "Great! Also, what's the minimum order quantity?"
+                        : "හොඳයි! එසේම, අවම ඇණවුම් ප්‍රමාණය කුමක්ද?";
+                }
+            });
+            
+            // Reload UI
+            if (activePage === 'home') loadPosts();
+            loadNotifications();
+            loadMessages();
+            loadBusinesses();
+        }
+
+        // ===== MOBILE MENU FUNCTIONS =====
+        function toggleMobileMenu() {
+            const drawer = document.querySelector('.mobile-menu-drawer');
+            const overlay = document.querySelector('.mobile-menu-overlay');
+            drawer.classList.toggle('active');
+            overlay.classList.toggle('active');
+        }
+
+        function closeMobileMenu() {
+            const drawer = document.querySelector('.mobile-menu-drawer');
+            const overlay = document.querySelector('.mobile-menu-overlay');
+            drawer.classList.remove('active');
+            overlay.classList.remove('active');
+        }
+
+        // ===== PAGE NAVIGATION =====
+        function switchPage(page, isBack = false) {
+            if (page === activePage) return;
+            
+            activePage = page;
+            
+            if (!isBack) {
+                pageHistory.push(page);
+            }
+            
+            // Hide all pages
+            document.querySelectorAll('.page').forEach(pageEl => {
+                pageEl.classList.remove('active');
+            });
+            
+            // Show selected page
+            const pageElement = document.getElementById(`${page}-page`);
+            if (pageElement) {
+                pageElement.classList.add('active');
+            }
+            
+            // Update navigation
+            updateNavigation(page);
+            
+            // Load page data
+            switch(page) {
+                case 'home':
+                    loadPosts();
+                    break;
+                case 'network':
+                    loadBusinesses();
+                    break;
+                case 'notifications':
+                    loadNotifications();
+                    break;
+                case 'profile':
+                    loadProfileData();
+                    break;
+            }
+            
+            closeMobileMenu();
+            
+            // Update back button visibility
+            updateBackButton();
+        }
+
+        function updateBackButton() {
+            const backBtn = document.querySelector('.mobile-back-btn');
+            if (backBtn) {
+                if (pageHistory.length > 1) {
+                    backBtn.style.display = 'flex';
+                } else {
+                    backBtn.style.display = 'none';
+                }
+            }
+        }
+
+        function updateNavigation(page) {
+            // Update sidebar items
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            
+            // Update bottom nav tabs
+            document.querySelectorAll('.nav-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Set active based on page
+            const pageMap = {
+                'home': 'fa-home',
+                'network': 'fa-users',
+                'notifications': 'fa-bell',
+                'profile': 'fa-user'
+            };
+            
+            const targetIcon = pageMap[page];
+            if (targetIcon) {
+                // Set active sidebar item
+                document.querySelectorAll('.nav-item').forEach(item => {
+                    if (item.querySelector('.nav-icon i').className.includes(targetIcon)) {
+                        item.classList.add('active');
+                    }
+                });
+                
+                // Set active bottom nav tab
+                document.querySelectorAll('.nav-tab').forEach(tab => {
+                    if (tab.querySelector('i').className.includes(targetIcon)) {
+                        tab.classList.add('active');
+                    }
+                });
+            }
+        }
+
+        // ===== POST MANAGEMENT =====
+        function createPost() {
+            const content = document.getElementById('post-content').value.trim();
+            const visibility = document.getElementById('post-visibility').value;
+            
+            if (!content) {
+                showToast(currentLanguage === 'en' ? "Please write something!" : "කරුණාකර යමක් ලියන්න!", "warning");
+                return;
+            }
+            
+            const newPost = {
+                id: Date.now(),
+                businessId: currentUser ? currentUser.id : "demo123",
+                businessName: currentUser ? currentUser.name : "My Business",
+                businessLogo: currentUser ? currentUser.logo : "MB",
+                businessLogoUrl: currentProfilePicture,
+                content: content,
+                type: "normal",
+                likes: 0,
+                loves: 0,
+                cares: 0,
+                wows: 0,
+                hahas: 0,
+                sads: 0,
+                angrys: 0,
+                comments: 0,
+                shares: 0,
+                visibility: visibility,
+                category: currentUser ? currentUser.category : "electronics",
+                timestamp: currentLanguage === 'en' ? "Just now" : "දැන්ම",
+                createdAt: new Date().toISOString(),
+                userReaction: null
+            };
+            
+            // Add to posts array (at the beginning)
+            posts.unshift(newPost);
+            
+            // Update UI
+            loadPosts();
+            
+            // Clear input
+            document.getElementById('post-content').value = '';
+            
+            // Update post count
+            updatePostCount();
+            
+            // Show success message
+            showToast(currentLanguage === 'en' ? 'Post published successfully!' : 'පළ කිරීම සාර්ථකව ප්‍රකාශයට පත් කරන ලදී!', 'success');
+            
+            // Save to localStorage
+            saveToLocalStorage();
+        }
+
+        function createPostElement(post) {
+            const postEl = document.createElement('div');
+            postEl.className = 'post-card';
+            postEl.dataset.id = post.id;
+            
+            let visibilityIcon = '🌍';
+            let visibilityText = currentLanguage === 'en' ? 'Public' : 'පොදු';
+            if (post.visibility === 'followers') {
+                visibilityIcon = '👥';
+                visibilityText = currentLanguage === 'en' ? 'Followers' : 'අනුගාමීන්';
+            }
+            if (post.visibility === 'private') {
+                visibilityIcon = '🔒';
+                visibilityText = currentLanguage === 'en' ? 'Private' : 'පුද්ගලික';
+            }
+            
+            // Calculate total reactions
+            const totalReactions = post.likes + post.loves + post.cares + post.wows + post.hahas + post.sads + post.angrys;
+            
+            // Get user's current reaction
+            const userReaction = post.userReaction;
+            
+            // Create reaction preview HTML
+            let reactionPreview = '';
+            if (totalReactions > 0) {
+                const reactions = [];
+                if (post.likes > 0) reactions.push(`👍 ${post.likes}`);
+                if (post.loves > 0) reactions.push(`❤️ ${post.loves}`);
+                if (post.cares > 0) reactions.push(`🤗 ${post.cares}`);
+                if (post.wows > 0) reactions.push(`😲 ${post.wows}`);
+                if (post.hahas > 0) reactions.push(`😂 ${post.hahas}`);
+                if (post.sads > 0) reactions.push(`😢 ${post.sads}`);
+                if (post.angrys > 0) reactions.push(`😠 ${post.angrys}`);
+                
+                reactionPreview = `
+                    <div class="reaction-preview">
+                        <div style="display: flex; align-items: center; gap: 5px;">
+                            <div style="display: flex; gap: 2px;">
+                                ${reactions.slice(0, 3).join(' ')}
+                            </div>
+                            ${totalReactions > 0 ? `<span class="reaction-count">${totalReactions}</span>` : ''}
+                        </div>
+                    </div>
+                `;
+            }
+            
+            let extraContent = '';
+            if (post.type === 'product') {
+                extraContent = `
+                    <div style="background: rgba(24, 119, 242, 0.1); padding: 15px; border-radius: 10px; margin: 15px 0;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                            <div>
+                                <div style="font-size: 12px; color: var(--text-secondary);">${currentLanguage === 'en' ? 'Product' : 'භාණ්ඩය'}</div>
+                                <div style="font-weight: 600;">${currentLanguage === 'en' ? 'Wholesale Product' : 'තොග භාණ්ඩය'}</div>
+                            </div>
+                            <div style="text-align: right;">
+                                <div style="font-size: 12px; color: var(--text-secondary);">${currentLanguage === 'en' ? 'Price' : 'මිල'}</div>
+                                <div style="font-weight: 600; color: var(--primary);">${post.price || (currentLanguage === 'en' ? 'Contact for price' : 'මිල සඳහා සම්බන්ධ වන්න')}</div>
+                            </div>
+                        </div>
+                        <div style="display: flex; justify-content: space-between;">
+                            <div>
+                                <div style="font-size: 12px; color: var(--text-secondary);">${currentLanguage === 'en' ? 'Minimum Order' : 'අවම ඇණවුම'}</div>
+                                <div style="font-weight: 600;">${post.minOrder || (currentLanguage === 'en' ? 'Negotiable' : 'සාකච්ඡා කළ හැකි')}</div>
+                            </div>
+                            <button class="btn btn-primary" style="padding: 8px 20px; font-size: 14px;" onclick="messageBusiness('${post.businessId}')">
+                                <i class="fas fa-shopping-cart"></i> ${currentLanguage === 'en' ? 'Order Now' : 'දැන් ඇණවුම් කරන්න'}
+                            </button>
+                        </div>
+                    </div>
+                `;
+            } else if (post.type === 'offer') {
+                extraContent = `
+                    <div style="background: rgba(66, 183, 42, 0.1); padding: 15px; border-radius: 10px; margin: 15px 0;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                            <div>
+                                <div style="font-size: 12px; color: var(--text-secondary);">${currentLanguage === 'en' ? 'Special Offer' : 'විශේෂ පිරිනැමීම'}</div>
+                                <div style="font-weight: 600;">${post.offerTitle || (currentLanguage === 'en' ? 'Special Discount' : 'විශේෂ වට්ටම')}</div>
+                            </div>
+                            <div style="text-align: right;">
+                                <div style="font-size: 12px; color: var(--text-secondary);">${currentLanguage === 'en' ? 'Discount' : 'වට්ටම'}</div>
+                                <div style="font-weight: 600; color: var(--secondary);">${post.discount || '0%'} ${currentLanguage === 'en' ? 'OFF' : 'වට්ටම'}</div>
+                            </div>
+                        </div>
+                        <div style="font-size: 14px; color: var(--text-secondary);">
+                            <i class="far fa-calendar-alt"></i> ${currentLanguage === 'en' ? 'Valid until:' : 'වලංගු වන්නේ:'} ${post.validDate || (currentLanguage === 'en' ? 'Contact for details' : 'විස්තර සඳහා සම්බන්ධ වන්න')}
+                        </div>
+                    </div>
+                `;
+            }
+            
+            // Reaction button class based on user's reaction
+            let likeButtonClass = 'post-interaction-btn';
+            let likeButtonIcon = 'far fa-thumbs-up';
+            let likeButtonText = currentLanguage === 'en' ? 'Like' : 'කැමති';
+            
+            if (userReaction === 'like') {
+                likeButtonClass = 'post-interaction-btn active';
+                likeButtonIcon = 'fas fa-thumbs-up';
+                likeButtonText = currentLanguage === 'en' ? 'Liked' : 'කැමති විය';
+            } else if (userReaction) {
+                // User has another reaction
+                likeButtonClass = 'post-interaction-btn';
+                likeButtonText = currentLanguage === 'en' ? 'Like' : 'කැමති';
+            }
+            
+            postEl.innerHTML = `
+                <div class="post-header">
+                    <div class="post-user">
+                        <div class="post-user-avatar" style="${post.businessLogoUrl ? `background-image: url('${post.businessLogoUrl}')` : ''}">${post.businessLogoUrl ? '' : post.businessLogo}</div>
+                        <div class="post-user-info">
+                            <h4>${post.businessName}</h4>
+                            <div class="post-time">
+                                <i class="far fa-clock"></i> ${post.timestamp} • 
+                                <span class="post-visibility">${visibilityIcon} ${visibilityText}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="post-content">
+                    ${post.content}
+                    ${extraContent}
+                </div>
+                
+                <div class="post-stats">
+                    ${reactionPreview}
+                    <span>${post.comments} ${currentLanguage === 'en' ? 'comments' : 'අදහස්'} • ${post.shares} ${currentLanguage === 'en' ? 'shares' : 'හුවමාරු'}</span>
+                </div>
+                
+                <!-- Reactions Container -->
+                <div class="reactions-container" id="reactions-${post.id}">
+                    <div class="reaction-btn like" onclick="addReaction(${post.id}, 'like')" onmouseenter="showReactionTooltip(this, '${currentLanguage === 'en' ? 'Like' : 'කැමති'}')">
+                        <i class="fas fa-thumbs-up"></i>
+                        <div class="reaction-tooltip">${currentLanguage === 'en' ? 'Like' : 'කැමති'}</div>
+                    </div>
+                    <div class="reaction-btn love" onclick="addReaction(${post.id}, 'love')" onmouseenter="showReactionTooltip(this, '${currentLanguage === 'en' ? 'Love' : 'ආදරය'}')">
+                        <i class="fas fa-heart"></i>
+                        <div class="reaction-tooltip">${currentLanguage === 'en' ? 'Love' : 'ආදරය'}</div>
+                    </div>
+                    <div class="reaction-btn care" onclick="addReaction(${post.id}, 'care')" onmouseenter="showReactionTooltip(this, '${currentLanguage === 'en' ? 'Care' : 'සැලකිල්ල'}')">
+                        <i class="fas fa-hands-helping"></i>
+                        <div class="reaction-tooltip">${currentLanguage === 'en' ? 'Care' : 'සැලකිල්ල'}</div>
+                    </div>
+                    <div class="reaction-btn wow" onclick="addReaction(${post.id}, 'wow')" onmouseenter="showReactionTooltip(this, 'Wow')">
+                        <i class="fas fa-surprise"></i>
+                        <div class="reaction-tooltip">Wow</div>
+                    </div>
+                    <div class="reaction-btn haha" onclick="addReaction(${post.id}, 'haha')" onmouseenter="showReactionTooltip(this, '${currentLanguage === 'en' ? 'Haha' : 'හාහා'}')">
+                        <i class="fas fa-laugh"></i>
+                        <div class="reaction-tooltip">${currentLanguage === 'en' ? 'Haha' : 'හාහා'}</div>
+                    </div>
+                    <div class="reaction-btn sad" onclick="addReaction(${post.id}, 'sad')" onmouseenter="showReactionTooltip(this, '${currentLanguage === 'en' ? 'Sad' : 'කනගාටුව'}')">
+                        <i class="fas fa-sad-tear"></i>
+                        <div class="reaction-tooltip">${currentLanguage === 'en' ? 'Sad' : 'කනගාටුව'}</div>
+                    </div>
+                    <div class="reaction-btn angry" onclick="addReaction(${post.id}, 'angry')" onmouseenter="showReactionTooltip(this, '${currentLanguage === 'en' ? 'Angry' : 'කෝපය'}')">
+                        <i class="fas fa-angry"></i>
+                        <div class="reaction-tooltip">${currentLanguage === 'en' ? 'Angry' : 'කෝපය'}</div>
+                    </div>
+                </div>
+                
+                <div class="post-actions-bar">
+                    <button class="${likeButtonClass}" onclick="toggleReactions(${post.id})" onmouseenter="showReactions(${post.id})" onmouseleave="hideReactions(${post.id})">
+                        <i class="${likeButtonIcon}"></i> ${likeButtonText}
+                    </button>
+                    <button class="post-interaction-btn" onclick="commentOnPost('${post.id}')">
+                        <i class="far fa-comment"></i> ${currentLanguage === 'en' ? 'Comment' : 'අදහස් දක්වන්න'}
+                    </button>
+                    <button class="post-interaction-btn" onclick="sharePost('${post.id}')">
+                        <i class="fas fa-share"></i> ${currentLanguage === 'en' ? 'Share' : 'හුවමාරු කරන්න'}
+                    </button>
+                    <button class="post-interaction-btn" onclick="messageBusiness('${post.businessId}')">
+                        <i class="far fa-envelope"></i> ${currentLanguage === 'en' ? 'Message' : 'පණිවිඩය'}
+                    </button>
+                </div>
+            `;
+            
+            return postEl;
+        }
+
+        // ===== REACTIONS FUNCTIONS =====
+        function showReactions(postId) {
+            const reactionsContainer = document.getElementById(`reactions-${postId}`);
+            if (reactionsContainer) {
+                clearTimeout(window.reactionHideTimeout);
+                reactionsContainer.classList.add('active');
+            }
+        }
+
+        function hideReactions(postId) {
+            const reactionsContainer = document.getElementById(`reactions-${postId}`);
+            if (reactionsContainer) {
+                window.reactionHideTimeout = setTimeout(() => {
+                    reactionsContainer.classList.remove('active');
+                }, 300);
+            }
+        }
+
+        function toggleReactions(postId) {
+            const reactionsContainer = document.getElementById(`reactions-${postId}`);
+            if (reactionsContainer) {
+                if (reactionsContainer.classList.contains('active')) {
+                    reactionsContainer.classList.remove('active');
+                } else {
+                    reactionsContainer.classList.add('active');
+                }
+            }
+        }
+
+        function closeReactions() {
+            document.querySelectorAll('.reactions-container').forEach(container => {
+                container.classList.remove('active');
+            });
+        }
+
+        function showReactionTooltip(element, text) {
+            const tooltip = element.querySelector('.reaction-tooltip');
+            if (tooltip) {
+                tooltip.textContent = text;
+            }
+        }
+
+        function addReaction(postId, reactionType) {
+            const post = posts.find(p => p.id == postId);
+            if (!post) return;
+            
+            // Remove previous reaction if exists
+            const previousReaction = post.userReaction;
+            if (previousReaction) {
+                post[previousReaction + 's']--;
+            }
+            
+            // Add new reaction
+            post[reactionType + 's']++;
+            post.userReaction = reactionType;
+            
+            // Update UI
+            loadPosts();
+            
+            // Show feedback
+            const reactionNames = {
+                'like': currentLanguage === 'en' ? 'Liked' : 'කැමති විය',
+                'love': currentLanguage === 'en' ? 'Loved' : 'ආදරය කළා',
+                'care': currentLanguage === 'en' ? 'Cared' : 'සැලකිල්ල දැක්වූ',
+                'wow': currentLanguage === 'en' ? 'Wow' : 'වාව්',
+                'haha': currentLanguage === 'en' ? 'Haha' : 'හාහා',
+                'sad': currentLanguage === 'en' ? 'Sad' : 'කනගාටුව',
+                'angry': currentLanguage === 'en' ? 'Angry' : 'කෝපය'
+            };
+            
+            showToast(`${reactionNames[reactionType]}!`, 'success');
+            
+            // Close reactions popup
+            closeReactions();
+        }
+
+        function loadPosts() {
+            const feedContainer = document.getElementById('feed-posts');
+            const searchTerm = document.getElementById('global-search').value.toLowerCase();
+            
+            let filteredPosts = posts;
+            
+            if (searchTerm) {
+                filteredPosts = posts.filter(post => 
+                    post.content.toLowerCase().includes(searchTerm) ||
+                    post.businessName.toLowerCase().includes(searchTerm) ||
+                    (post.category && post.category.toLowerCase().includes(searchTerm))
+                );
+            }
+            
+            if (filteredPosts.length === 0) {
+                feedContainer.innerHTML = `
+                    <div style="text-align: center; padding: 60px 20px;">
+                        <i class="fas fa-search" style="font-size: 60px; color: var(--text-tertiary); margin-bottom: 20px;"></i>
+                        <h3 style="margin-bottom: 10px;">${currentLanguage === 'en' ? 'No posts found' : 'පළ කිරීම් හමු නොවීය'}</h3>
+                        <p style="color: var(--text-secondary);">${currentLanguage === 'en' ? 'Try different search terms' : 'වෙනස් සෙවුම් පද උත්සාහ කරන්න'}</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            feedContainer.innerHTML = '';
+            
+            filteredPosts.forEach(post => {
+                const postElement = createPostElement(post);
+                feedContainer.appendChild(postElement);
+            });
+        }
+
+        function searchContent() {
+            if (activePage === 'home') {
+                loadPosts();
+            } else if (activePage === 'network') {
+                loadBusinesses();
+            }
+        }
+
+        function updatePostCount() {
+            if (currentUser) {
+                const userPosts = posts.filter(post => post.businessId === currentUser.id);
+                document.getElementById('stat-posts').textContent = userPosts.length;
+            }
+        }
+
+        // ===== BUSINESS FUNCTIONS =====
+        function loadBusinesses() {
+            const container = document.getElementById('business-list');
+            const searchTerm = document.getElementById('global-search').value.toLowerCase();
+            
+            let filteredBusinesses = businesses;
+            
+            if (searchTerm) {
+                filteredBusinesses = businesses.filter(business => 
+                    business.name.toLowerCase().includes(searchTerm) ||
+                    business.category.toLowerCase().includes(searchTerm) ||
+                    business.description.toLowerCase().includes(searchTerm)
+                );
+            }
+            
+            if (filteredBusinesses.length === 0) {
+                container.innerHTML = `
+                    <div style="text-align: center; padding: 60px 20px; grid-column: 1 / -1;">
+                        <i class="fas fa-search" style="font-size: 60px; color: var(--text-tertiary); margin-bottom: 20px;"></i>
+                        <h3 style="margin-bottom: 10px;">${currentLanguage === 'en' ? 'No businesses found' : 'ව්‍යාපාර හමු නොවීය'}</h3>
+                        <p style="color: var(--text-secondary);">${currentLanguage === 'en' ? 'Try different search terms' : 'වෙනස් සෙවුම් පද උත්සාහ කරන්න'}</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            let html = '';
+            filteredBusinesses.forEach(business => {
+                html += `
+                    <div class="glass-card" style="padding: 20px; border-radius: 16px;">
+                        <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 15px;">
+                            <div class="user-avatar" style="width: 50px; height: 50px; font-size: 20px;">${business.logo}</div>
+                            <div>
+                                <h4 style="font-weight: 600; margin-bottom: 5px;">${business.name}</h4>
+                                <div style="display: flex; align-items: center; gap: 5px;">
+                                    <div class="profile-category" style="font-size: 11px;">${business.category}</div>
+                                    ${business.online ? '<div class="online-indicator"></div>' : ''}
+                                </div>
+                            </div>
+                        </div>
+                        <p style="font-size: 13px; color: var(--text-secondary); margin-bottom: 15px;">${business.description}</p>
+                        <div style="display: flex; justify-content: space-between; font-size: 12px; color: var(--text-secondary); margin-bottom: 15px;">
+                            <div>${business.followers} ${currentLanguage === 'en' ? 'Followers' : 'අනුගාමීන්'}</div>
+                            <div>${business.posts} ${currentLanguage === 'en' ? 'Posts' : 'පළ කිරීම්'}</div>
+                        </div>
+                        <div style="display: flex; gap: 10px;">
+                            <button class="btn btn-primary" style="flex: 1; padding: 10px; font-size: 14px;" onclick="followBusiness('${business.id}')">
+                                <i class="fas fa-user-plus"></i> ${currentLanguage === 'en' ? 'Follow' : 'අනුගමනය'}
+                            </button>
+                            <button class="btn btn-outline" style="flex: 1; padding: 10px; font-size: 14px;" onclick="messageBusiness('${business.id}')">
+                                <i class="far fa-envelope"></i> ${currentLanguage === 'en' ? 'Message' : 'පණිවිඩ'}
+                            </button>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            container.innerHTML = html;
+        }
+
+        function followBusiness(businessId) {
+            const business = businesses.find(b => b.id === businessId);
+            if (business) {
+                business.followers++;
+                loadBusinesses();
+                showToast(currentLanguage === 'en' ? `Following ${business.name}` : `${business.name} අනුගමනය කරයි`, 'success');
+            }
+        }
+
+        // ===== NOTIFICATIONS =====
+        function loadNotifications() {
+            const container = document.getElementById('notifications-list');
+            
+            if (notifications.length === 0) {
+                container.innerHTML = `
+                    <div style="text-align: center; padding: 60px 20px;">
+                        <i class="far fa-bell" style="font-size: 60px; color: var(--text-tertiary); margin-bottom: 20px;"></i>
+                        <h3 style="margin-bottom: 10px;">${currentLanguage === 'en' ? 'No notifications' : 'දැනුම්දීම් නොමැත'}</h3>
+                        <p style="color: var(--text-secondary);">${currentLanguage === 'en' ? 'When you get notifications, they\'ll appear here' : 'ඔබට දැනුම්දීම් ලැබුණු විට, ඒවා මෙහි දිස්වනු ඇත'}</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            let html = '';
+            notifications.forEach(notification => {
+                html += `
+                    <div class="notification-item ${notification.unread ? 'unread' : ''}" onclick="markNotificationAsRead(${notification.id})">
+                        <div style="width: 40px; height: 40px; border-radius: 10px; background: ${notification.iconColor}20; display: flex; align-items: center; justify-content: center; color: ${notification.iconColor}; font-size: 18px; flex-shrink: 0;">
+                            <i class="${notification.icon}"></i>
+                        </div>
+                        <div style="flex: 1;">
+                            <div style="font-weight: 500; margin-bottom: 5px;">${notification.text}</div>
+                            <div style="font-size: 12px; color: var(--text-secondary);">${notification.time}</div>
+                        </div>
+                        ${notification.unread ? '<div style="width: 8px; height: 8px; background: var(--primary); border-radius: 50%; margin-top: 8px;"></div>' : ''}
+                    </div>
+                `;
+            });
+            
+            container.innerHTML = html;
+        }
+
+        function markNotificationAsRead(notificationId) {
+            const notification = notifications.find(n => n.id === notificationId);
+            if (notification) {
+                notification.unread = false;
+                loadNotifications();
+                showToast(currentLanguage === 'en' ? 'Notification marked as read' : 'දැනුම්දීම කියවූ ලෙස සලකුණු කරන ලදී');
+            }
+        }
+
+        // ===== MESSENGER FUNCTIONS =====
+        function openMessenger() {
+            document.getElementById('messenger-window').classList.add('active');
+            loadMessages();
+        }
+
+        function closeMessenger() {
+            document.getElementById('messenger-window').classList.remove('active');
+        }
+
+        function loadMessages() {
+            const container = document.getElementById('messages-container');
+            
+            if (messages.length === 0) {
+                container.innerHTML = `
+                    <div style="text-align: center; padding: 40px 20px; color: var(--text-secondary);">
+                        <i class="far fa-comments" style="font-size: 40px; margin-bottom: 15px;"></i>
+                        <p>${currentLanguage === 'en' ? 'No messages yet' : 'තවම පණිවිඩ නොමැත'}</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            let html = '';
+            messages.forEach(message => {
+                if (message.sent) {
+                    html += `
+                        <div class="message message-sent">
+                            <div>${message.text}</div>
+                            <div class="message-status">
+                                <span>${message.time}</span>
+                                <i class="fas fa-check${message.status === 'read' ? '-double' : ''}" style="margin-left: 5px;"></i>
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    html += `
+                        <div class="message message-received">
+                            <div style="font-size: 12px; font-weight: 600; margin-bottom: 5px;">${message.sender}</div>
+                            <div>${message.text}</div>
+                            <div class="message-time">${message.time}</div>
+                        </div>
+                    `;
+                }
+            });
+            
+            container.innerHTML = html;
+            container.scrollTop = container.scrollHeight;
+        }
+
+        function handleMessageKeydown(e) {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                sendMessage();
+            }
+        }
+
+        function sendMessage() {
+            const input = document.getElementById('message-input');
+            const text = input.value.trim();
+            
+            if (!text) return;
+            
+            const newMessage = {
+                id: messages.length + 1,
+                sender: currentLanguage === 'en' ? "You" : "ඔබ",
+                senderLogo: "MB",
+                senderLogoUrl: currentProfilePicture,
+                text: text,
+                time: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}),
+                sent: true,
+                status: "sent"
+            };
+            
+            messages.push(newMessage);
+            loadMessages();
+            input.value = '';
+            
+            // Show "sent" status
+            setTimeout(() => {
+                newMessage.status = "delivered";
+                loadMessages();
+                
+                // Simulate typing indicator
+                document.getElementById('typing-indicator').style.display = 'flex';
+                
+                // Auto-reply after 1 second
+                setTimeout(() => {
+                    document.getElementById('typing-indicator').style.display = 'none';
+                    
+                    const reply = {
+                        id: messages.length + 1,
+                        sender: "TechHub Electronics",
+                        senderLogo: "TH",
+                        senderLogoUrl: "",
+                        text: currentLanguage === 'en' 
+                            ? "Thanks for your message! We'll get back to you soon with the catalog." 
+                            : "ඔබේ පණිවිඩයට ස්තුතියි! අපි ඉක්මනින් ඔබට කැටලොගය සමඟ පිළිතුරු දෙන්නෙමු.",
+                        time: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}),
+                        sent: false,
+                        status: "delivered"
+                    };
+                    messages.push(reply);
+                    loadMessages();
+                }, 2000);
+            }, 500);
+        }
+
+        function callBusiness() {
+            showToast(currentLanguage === 'en' ? 'Calling TechHub Electronics...' : 'TechHub Electronics අමතමින්...', 'info');
+        }
+
+        // ===== PROFILE FUNCTIONS =====
+        function loadProfileData() {
+            if (currentUser) {
+                document.getElementById('profile-name').textContent = currentUser.name;
+                document.getElementById('profile-avatar').textContent = currentUser.logo;
+                document.getElementById('profile-category').textContent = currentUser.category;
+                document.getElementById('profile-description').textContent = currentUser.description || (currentLanguage === 'en' ? "Your business description will appear here" : "ඔබේ ව්‍යාපාර විස්තරය මෙහි දිස්වනු ඇත");
+                document.getElementById('stat-followers').textContent = currentUser.followers || 0;
+                document.getElementById('stat-following').textContent = currentUser.following || 0;
+                
+                // Update settings profile
+                document.getElementById('settings-profile-name').textContent = currentUser.name;
+                document.getElementById('settings-profile-category').textContent = currentUser.category;
+                
+                updatePostCount();
+            }
+        }
+
+        function openEditProfileModal() {
+            if (!currentUser) {
+                currentUser = {
+                    name: currentLanguage === 'en' ? "My Business" : "මගේ ව්‍යාපාරය",
+                    logo: "MB",
+                    category: "electronics",
+                    description: "",
+                    followers: 0,
+                    following: 0
+                };
+            }
+            
+            document.getElementById('edit-name').value = currentUser.name;
+            document.getElementById('edit-logo').value = currentUser.logo;
+            document.getElementById('edit-category').value = currentUser.category;
+            document.getElementById('edit-description').value = currentUser.description || "";
+            document.getElementById('edit-phone').value = currentUser.phone || "";
+            document.getElementById('edit-address').value = currentUser.address || "";
+            
+            document.getElementById('edit-profile-modal').classList.add('active');
+        }
+
+        function saveProfile() {
+            const name = document.getElementById('edit-name').value;
+            const logo = document.getElementById('edit-logo').value.toUpperCase().substring(0, 2);
+            const category = document.getElementById('edit-category').value;
+            const description = document.getElementById('edit-description').value;
+            const phone = document.getElementById('edit-phone').value;
+            const address = document.getElementById('edit-address').value;
+            
+            currentUser = {
+                ...currentUser,
+                name: name,
+                logo: logo,
+                category: category,
+                description: description,
+                phone: phone,
+                address: address
+            };
+            
+            // Update UI
+            document.getElementById('profile-name').textContent = name;
+            document.getElementById('profile-avatar').textContent = logo;
+            document.getElementById('profile-category').textContent = category;
+            document.getElementById('profile-description').textContent = description;
+            document.getElementById('user-avatar').textContent = logo;
+            document.getElementById('user-name').textContent = name;
+            document.getElementById('current-user-avatar').textContent = logo;
+            document.getElementById('settings-profile-name').textContent = name;
+            document.getElementById('settings-profile-category').textContent = category;
+            
+            closeModal('edit-profile-modal');
+            showToast(currentLanguage === 'en' ? 'Profile updated successfully!' : 'පැතිකඩ සාර්ථකව යාවත්කාලීන කරන ලදී!', 'success');
+            
+            // Save to localStorage
+            localStorage.setItem('tradeConnectUser', JSON.stringify(currentUser));
+        }
+
+        // ===== POST INTERACTIONS =====
+        function commentOnPost(postId) {
+            const comment = prompt(currentLanguage === 'en' ? "Enter your comment:" : "ඔබේ අදහස ඇතුළත් කරන්න:");
+            if (comment) {
+                const post = posts.find(p => p.id == postId);
+                if (post) {
+                    post.comments++;
+                    loadPosts();
+                    showToast(currentLanguage === 'en' ? 'Comment added!' : 'අදහස එකතු කරන ලදී!');
+                }
+            }
+        }
+
+        function sharePost(postId) {
+            const post = posts.find(p => p.id == postId);
+            if (post) {
+                post.shares++;
+                loadPosts();
+                showToast(currentLanguage === 'en' ? 'Post shared!' : 'පළ කිරීම හුවමාරු කරන ලදී!');
+                
+                // Share functionality
+                if (navigator.share) {
+                    navigator.share({
+                        title: `${post.businessName} on TradeConnect`,
+                        text: post.content.substring(0, 100) + '...',
+                        url: window.location.href
+                    });
+                }
+            }
+        }
+
+        function messageBusiness(businessId) {
+            openMessenger();
+            showToast(currentLanguage === 'en' ? 'Messaging business...' : 'ව්‍යාපාරයට පණිවිඩ යවමින්...', 'info');
+        }
+
+        // ===== MODAL FUNCTIONS =====
+        function openRegisterModal() {
+            document.getElementById('register-modal').classList.add('active');
+        }
+
+        function openPostModal(type) {
+            let title = currentLanguage === 'en' ? "Create Post" : "පළ කිරීමක් සාදන්න";
+            let extraFields = "";
+            
+            if (type === 'product') {
+                title = currentLanguage === 'en' ? "Sell Product" : "භාණ්ඩය විකුණන්න";
+                extraFields = `
+                    <div class="form-group">
+                        <label class="form-label">${currentLanguage === 'en' ? 'Product Name' : 'භාණ්ඩ නාමය'}</label>
+                        <input type="text" id="product-name" class="form-input" placeholder="${currentLanguage === 'en' ? 'Enter product name' : 'භාණ්ඩයේ නාමය ඇතුළත් කරන්න'}">
+                    </div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                        <div class="form-group">
+                            <label class="form-label">${currentLanguage === 'en' ? 'Price (Rs.)' : 'මිල (රු.)'}</label>
+                            <input type="number" id="product-price" class="form-input" placeholder="${currentLanguage === 'en' ? 'Wholesale price' : 'තොග මිල'}">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">${currentLanguage === 'en' ? 'Min Order' : 'අවම ඇණවුම'}</label>
+                            <input type="text" id="product-min-order" class="form-input" placeholder="${currentLanguage === 'en' ? 'e.g., 5 units' : 'උදා: ඒකක 5 ක්'}">
+                        </div>
+                    </div>
+                `;
+            } else if (type === 'offer') {
+                title = currentLanguage === 'en' ? "Create Special Offer" : "විශේෂ පිරිනැමීමක් සාදන්න";
+                extraFields = `
+                    <div class="form-group">
+                        <label class="form-label">${currentLanguage === 'en' ? 'Offer Title' : 'පිරිනැමීමේ නම'}</label>
+                        <input type="text" id="offer-title" class="form-input" placeholder="${currentLanguage === 'en' ? 'e.g., Summer Discount' : 'උදා: ගිම්හාන වට්ටම'}">
+                    </div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                        <div class="form-group">
+                            <label class="form-label">${currentLanguage === 'en' ? 'Discount %' : 'වට්ටම් %'}</label>
+                            <input type="number" id="offer-discount" class="form-input" placeholder="${currentLanguage === 'en' ? 'e.g., 20' : 'උදා: 20'}">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">${currentLanguage === 'en' ? 'Valid Until' : 'වලංගු වන්නේ'}</label>
+                            <input type="date" id="offer-date" class="form-input">
+                        </div>
+                    </div>
+                `;
+            }
+            
+            document.getElementById('post-modal-title').textContent = title;
+            document.getElementById('post-extra-fields').innerHTML = extraFields;
+            document.getElementById('post-modal').classList.add('active');
+        }
+
+        function publishPost() {
+            const content = document.getElementById('modal-post-content').value;
+            if (!content) {
+                showToast(currentLanguage === 'en' ? 'Please enter post content' : 'කරුණාකර පළ කිරීමේ අන්තර්ගතය ඇතුළත් කරන්න', 'warning');
+                return;
+            }
+            
+            // Get additional fields based on post type
+            const postType = document.getElementById('post-modal-title').textContent.includes('Product') ? 'product' : 
+                            document.getElementById('post-modal-title').textContent.includes('Offer') ? 'offer' : 'normal';
+            
+            const newPost = {
+                id: Date.now(),
+                businessId: currentUser ? currentUser.id : "demo123",
+                businessName: currentUser ? currentUser.name : "My Business",
+                businessLogo: currentUser ? currentUser.logo : "MB",
+                businessLogoUrl: currentProfilePicture,
+                content: content,
+                type: postType,
+                likes: 0,
+                loves: 0,
+                cares: 0,
+                wows: 0,
+                hahas: 0,
+                sads: 0,
+                angrys: 0,
+                comments: 0,
+                shares: 0,
+                visibility: "public",
+                category: currentUser ? currentUser.category : "electronics",
+                timestamp: currentLanguage === 'en' ? "Just now" : "දැන්ම",
+                createdAt: new Date().toISOString(),
+                userReaction: null
+            };
+            
+            // Add product/offer specific fields
+            if (postType === 'product') {
+                newPost.price = document.getElementById('product-price').value || "Contact for price";
+                newPost.minOrder = document.getElementById('product-min-order').value || "Negotiable";
+            } else if (postType === 'offer') {
+                newPost.offerTitle = document.getElementById('offer-title').value || "Special Offer";
+                newPost.discount = document.getElementById('offer-discount').value || "0%";
+                newPost.validDate = document.getElementById('offer-date').value || "2024-12-31";
+            }
+            
+            // Add to posts array
+            posts.unshift(newPost);
+            
+            // Update UI
+            loadPosts();
+            closeModal('post-modal');
+            showToast(currentLanguage === 'en' ? 'Post published!' : 'පළ කිරීම ප්‍රකාශයට පත් කරන ලදී!', 'success');
+            
+            // Save to localStorage
+            saveToLocalStorage();
+        }
+
+        function openSettings() {
+            document.getElementById('settings-modal').classList.add('active');
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.remove('active');
+        }
+
+        function closeAllModals() {
+            document.querySelectorAll('.modal-overlay').forEach(modal => {
+                modal.classList.remove('active');
+            });
+        }
+
+        // ===== THEME MANAGEMENT =====
+        function toggleTheme() {
+            const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+            setTheme(newTheme);
+        }
+
+        function setTheme(theme) {
+            currentTheme = theme;
+            document.body.setAttribute('data-theme', theme);
+            
+            const themeIcon = document.querySelector('#theme-toggle-btn i');
+            if (themeIcon) {
+                themeIcon.className = theme === 'light' ? 'fas fa-moon' : 'fas fa-sun';
+            }
+            
+            localStorage.setItem('tradeConnectTheme', theme);
+            showToast(`${theme === 'light' ? (currentLanguage === 'en' ? 'Light' : 'ආලෝක') : (currentLanguage === 'en' ? 'Dark' : 'අඳුරු')} ${currentLanguage === 'en' ? 'mode activated' : 'ප්‍රකාරය සක්‍රිය කරන ලදී'}`);
+        }
+
+        // ===== AUTHENTICATION =====
+        function handleLogin() {
+            const email = document.getElementById('login-email').value;
+            const password = document.getElementById('login-password').value;
+            
+            if (!email || !password) {
+                document.getElementById('login-error').textContent = currentLanguage === 'en' ? 'Please enter email and password' : 'කරුණාකර ඊමේල් සහ මුරපදය ඇතුළත් කරන්න';
+                document.getElementById('login-error').style.display = 'block';
+                return;
+            }
+            
+            showToast(currentLanguage === 'en' ? 'Logging in...' : 'පිවිසෙමින්...', 'info');
+            
+            // Demo login
+            setTimeout(() => {
+                currentUser = {
+                    id: "user123",
+                    name: currentLanguage === 'en' ? "My Business" : "මගේ ව්‍යාපාරය",
+                    email: email,
+                    logo: "MB",
+                    category: "electronics",
+                    description: currentLanguage === 'en' ? "A leading wholesale business" : "ප්‍රමුඛ තොග වෙළඳාමක්",
+                    followers: 45,
+                    following: 32,
+                    phone: "+94 77 123 4567",
+                    address: currentLanguage === 'en' ? "Colombo, Sri Lanka" : "කොළඹ, ශ්‍රී ලංකාව"
+                };
+                
+                showMainApp();
+                showToast(currentLanguage === 'en' ? 'Welcome to TradeConnect!' : 'TradeConnect වෙත සාදරයෙන් පිළිගනිමු!', 'success');
+            }, 1000);
+        }
+
+        function handleRegister() {
+            const name = document.getElementById('reg-business-name').value;
+            const email = document.getElementById('reg-email').value;
+            const phone = document.getElementById('reg-phone').value;
+            const category = document.getElementById('reg-category').value;
+            const description = document.getElementById('reg-description').value;
+            const password = document.getElementById('reg-password').value;
+            
+            if (!name || !email || !category || !password) {
+                document.getElementById('register-error').textContent = currentLanguage === 'en' ? 'Please fill required fields' : 'කරුණාකර අවශ්‍ය ක්ෂේත්‍ර පුරවන්න';
+                document.getElementById('register-error').style.display = 'block';
+                return;
+            }
+            
+            showToast(currentLanguage === 'en' ? 'Creating account...' : 'ගිණුම සාදමින්...', 'info');
+            
+            setTimeout(() => {
+                const logo = name.split(' ').map(w => w[0]).join('').toUpperCase().substring(0, 2);
+                
+                currentUser = {
+                    id: "newuser" + Date.now(),
+                    name: name,
+                    email: email,
+                    logo: logo,
+                    category: category,
+                    description: description,
+                    followers: 0,
+                    following: 0,
+                    phone: phone,
+                    address: ""
+                };
+                
+                closeModal('register-modal');
+                showMainApp();
+                showToast(currentLanguage === 'en' ? `Welcome ${name}! Your business is now live.` : `සාදරයෙන් පිළිගනිමු ${name}! ඔබේ ව්‍යාපාරය දැන් ක්‍රියාත්මකයි.`, 'success');
+            }, 1500);
+        }
+
+        function quickLogin() {
+            document.getElementById('login-email').value = 'demo@tradeconnect.com';
+            document.getElementById('login-password').value = 'password123';
+            setTimeout(() => handleLogin(), 100);
+        }
+
+        function showLoginScreen() {
+            document.getElementById('login-screen').classList.remove('hidden');
+            document.getElementById('main-app').classList.add('hidden');
+        }
+
+        function showMainApp() {
+            document.getElementById('login-screen').classList.add('hidden');
+            document.getElementById('main-app').classList.remove('hidden');
+            switchPage('home');
+        }
+
+        function handleLogout() {
+            const message = currentLanguage === 'en' 
+                ? 'Are you sure you want to logout?' 
+                : 'ඔබට නික්මීමට අවශ්‍ය බව විශ්වාසද?';
+            
+            if (confirm(message)) {
+                currentUser = null;
+                localStorage.removeItem('tradeConnectUser');
+                pageHistory = ['home'];
+                showLoginScreen();
+                showToast(currentLanguage === 'en' ? 'Logged out successfully' : 'සාර්ථකව නික්ම ගියා');
+            }
+        }
+
+        function loadUserData(userId) {
+            const savedUser = localStorage.getItem('tradeConnectUser');
+            if (savedUser) {
+                currentUser = JSON.parse(savedUser);
+                showMainApp();
+            } else {
+                quickLogin();
+            }
+        }
+
+        // ===== UTILITY FUNCTIONS =====
+        function showToast(message, type = 'info') {
+            // Remove existing toasts
+            document.querySelectorAll('.toast').forEach(toast => toast.remove());
+            
+            const toast = document.createElement('div');
+            let bgColor = 'var(--primary)';
+            
+            if (type === 'success') bgColor = 'var(--success)';
+            if (type === 'warning') bgColor = 'var(--warning)';
+            if (type === 'danger') bgColor = 'var(--danger)';
+            
+            toast.className = 'toast';
+            toast.style.background = bgColor;
+            toast.textContent = message;
+            
+            document.body.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.style.animation = 'toastSlideDown 0.3s ease';
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+
+        function saveToLocalStorage() {
+            localStorage.setItem('tradeConnectPosts', JSON.stringify(posts));
+            if (currentUser) {
+                localStorage.setItem('tradeConnectUser', JSON.stringify(currentUser));
+            }
+        }
+
+        // Initialize
+        console.log('TradeConnect App Loaded Successfully!');
+    </script>
+</body>
+</html>
